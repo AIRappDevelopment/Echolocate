@@ -2,9 +2,11 @@ package com.example.echolocate;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -21,6 +23,7 @@ import java.util.Locale;
 public class CameraActivity extends AppCompatActivity {
 
     public static final int SPEECH_TO_TEXT_REQUEST_CODE = 1;
+    private static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
 
     TextView speechTTText;//speech to text result
 
@@ -33,40 +36,73 @@ public class CameraActivity extends AppCompatActivity {
         Intent intent = getIntent();
         speechTTText = findViewById(R.id.speechTTText);
 
+        if(CheckPermissions()) {
+            Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getApplicationContext().getPackageName());
 
-        Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
-        speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getApplicationContext().getPackageName());
-
-        ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 1);
-        sr = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
-        BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, sr, speechRecognizerIntent);
-        sr.setRecognitionListener(listener);
-        sr.startListening(speechRecognizerIntent);
-        //Log.d("RecognitionListener", "error");
-
+            sr = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
+            BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, sr, speechRecognizerIntent);
+            sr.setRecognitionListener(listener);
+            sr.startListening(speechRecognizerIntent);
+            //Log.d("RecognitionListener", "error");
+        }else{
+            RequestPermissions();
+        }
     }
 
     //gets speech to text conversion
     //done with the help of Smartherd youtube
     public void getSpeechInput (View v){
-        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+        if(CheckPermissions()) {
+            Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getApplicationContext().getPackageName());
 
-        SpeechRecognizer sr = SpeechRecognizer.createSpeechRecognizer(this);
-        BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, sr, intent);
-        sr.setRecognitionListener(listener);
-        sr.startListening(intent);
-
-//        if (intent.resolveActivity(getPackageManager()) != null) {
-//            startActivityForResult(intent, SPEECH_TO_TEXT_REQUEST_CODE);
-//        } else {
-//            Toast.makeText(this, "unsupported", Toast.LENGTH_SHORT).show();
-//        }
+            sr = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
+            BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, sr, speechRecognizerIntent);
+            sr.setRecognitionListener(listener);
+            sr.startListening(speechRecognizerIntent);
+            //Log.d("RecognitionListener", "error");
+        }else{
+            RequestPermissions();
+        }
     }
+
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        switch (requestCode) {
+            case REQUEST_AUDIO_PERMISSION_CODE:
+                if (grantResults.length> 0) {
+                    boolean permissionToRecord = grantResults[0] == PackageManager.PERMISSION_GRANTED;
+                    if (permissionToRecord ) {
+                        Toast.makeText(getApplicationContext(), "Permission Granted", Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getApplicationContext(),"Permission Denied",Toast.LENGTH_LONG).show();
+                    }
+                }
+                break;
+        }
+    }
+    public boolean CheckPermissions() {
+        int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+    private void RequestPermissions() {
+        ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO    }, REQUEST_AUDIO_PERMISSION_CODE);
+    }
+
+
+
+
+
+
+
 
     @Override
     protected void onActivityResult ( int requestCode, int resultCode, Intent data){
