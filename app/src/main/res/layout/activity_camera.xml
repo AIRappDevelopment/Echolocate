@@ -7,13 +7,24 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
-    <TextView
-        android:id="@+id/CameraText"
+    <Button
+        android:id="@+id/speechTTBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/CameraTextStr"
-        android:textSize="30sp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="600dp"
+        android:onClick="getSpeechInput"
+        android:text="Button"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/speechTTText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:textSize="26sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"

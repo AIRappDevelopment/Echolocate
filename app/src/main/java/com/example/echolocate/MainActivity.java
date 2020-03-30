@@ -18,9 +18,10 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
              startCamera();
             }
-        }, 10000);
+        }, 5000);
     }
 
+    //starts the camera activity
     public void startCamera(){
         Intent intent = new Intent(this, CameraActivity.class);
         startActivity(intent);
