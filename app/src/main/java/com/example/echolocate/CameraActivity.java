@@ -73,7 +73,6 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
@@ -89,32 +88,14 @@ public class CameraActivity extends AppCompatActivity {
                 break;
         }
     }
+
     public boolean CheckPermissions() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
         return result == PackageManager.PERMISSION_GRANTED;
     }
+
     private void RequestPermissions() {
         ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO    }, REQUEST_AUDIO_PERMISSION_CODE);
-    }
-
-
-
-
-
-
-
-
-    @Override
-    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case SPEECH_TO_TEXT_REQUEST_CODE:
-                if (resultCode == RESULT_OK && data != null) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    speechTTText.setText(result.get(0));
-                }
-                break;
-        }
     }
 
     static public class BypassRecognitionListener implements RecognitionListener {
@@ -129,6 +110,7 @@ public class CameraActivity extends AppCompatActivity {
             this.speechRecognizer = speechRecognizer;
             this.speechRecognizerIntent = speechRecognizerIntent;
         }
+
         @Override
         public void onBeginningOfSpeech() {
 
@@ -167,7 +149,6 @@ public class CameraActivity extends AppCompatActivity {
             Log.d(TAG, "error");
             ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
             speechTTText.setText(matches.get(0));
-
         }
 
         @Override
@@ -175,4 +156,18 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+     /* unused code, uses speech-to-text w/ pop-up box
+    @Override
+    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case SPEECH_TO_TEXT_REQUEST_CODE:
+                if (resultCode == RESULT_OK && data != null) {
+                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+                    speechTTText.setText(result.get(0));
+                }
+                break;
+        }
+    }
+    */
 }
