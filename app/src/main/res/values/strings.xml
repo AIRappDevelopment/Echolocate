@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">Echolocate</string>
+    <string name="WelcomeStr">Welcome</string>
+    <string name="CameraTextStr">Camera</string>
 </resources>
