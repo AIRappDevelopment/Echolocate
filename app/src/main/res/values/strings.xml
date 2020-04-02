@@ -2,4 +2,6 @@
     <string name="app_name">Echolocate</string>
     <string name="WelcomeStr">Welcome</string>
     <string name="CameraTextStr">Camera</string>
+    <string name="toggleOffStr">Off</string>
+    <string name="toggleOnStr">On</string>
 </resources>

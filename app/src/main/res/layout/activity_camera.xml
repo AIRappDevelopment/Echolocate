@@ -7,13 +7,15 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
-    <Button
-        android:id="@+id/speechTTBtn"
+    <ToggleButton
+        android:id="@+id/toggleSTTButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="600dp"
+        android:layout_marginTop="500dp"
         android:onClick="getSpeechInput"
-        android:text="Button"
+        android:text="@string/toggleOffStr"
+        android:textOff="@string/toggleOffStr"
+        android:textOn="@string/toggleOnStr"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,4 +31,5 @@
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>
