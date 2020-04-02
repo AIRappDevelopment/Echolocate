@@ -13,11 +13,13 @@ import android.speech.SpeechRecognizer;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.ToggleButton;
 
+import java.util.ArrayList;
 import java.util.Locale;
 
 public class CameraActivity extends AppCompatActivity {
-    
+
     private static final int REQUEST_AUDIO_PERMISSION_CODE = 1;
 
     private TextView speechTTText;//speech to text result
@@ -27,25 +29,33 @@ public class CameraActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        speechTTText = findViewById(R.id.speechTTText);
+        speechTTText = (TextView) findViewById(R.id.speechTTText);
     }
 
     public void getSpeechInput (View v){
-        if(CheckPermissions()) {
-            Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getApplicationContext().getPackageName());
+        boolean on = ((ToggleButton) v).isChecked();
+        if(on) {
+            if (CheckPermissions()) {
+                Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+                speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getApplicationContext().getPackageName());
 
-            speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
-            BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, speechRecognizer);
-            speechRecognizer.setRecognitionListener(listener);
-            speechRecognizer.startListening(speechRecognizerIntent);
-        }else{
-            RequestPermissions();
+                speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
+                BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, speechRecognizer);
+                speechRecognizer.setRecognitionListener(listener);
+                speechRecognizer.startListening(speechRecognizerIntent);
+                //assignText(listener.getResults());
+            } else {
+                RequestPermissions();
+            }
         }
     }
+
+//    public void assignText(ArrayList<String> speechTTResults){
+//
+//    }
 
     //allows viewing of permission errors
     //eventually to be deleted

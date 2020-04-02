@@ -13,6 +13,7 @@ class BypassRecognitionListener implements RecognitionListener {
     private static final String TAG = "RecognitionListener";
     private TextView speechTTText;
     private SpeechRecognizer speechRecognizer;
+    private ArrayList<String> resultingStrings;
 
     BypassRecognitionListener(TextView speechTTText, SpeechRecognizer speechRecognizer){
         this.speechTTText = speechTTText;
@@ -54,12 +55,15 @@ class BypassRecognitionListener implements RecognitionListener {
 
     @Override
     public void onResults(Bundle results) {
-        Log.d(TAG, "error");
-        ArrayList<String> matches = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
-        speechTTText.setText(matches.get(0));
+        resultingStrings = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+        speechTTText.setText(resultingStrings.get(0));//leave for testing
     }
 
     @Override
     public void onRmsChanged(float rmsdB) {
+    }
+
+    public ArrayList<String> getResults(){
+        return resultingStrings;
     }
 }
