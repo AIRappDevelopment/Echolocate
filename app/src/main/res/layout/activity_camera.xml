@@ -7,6 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
+    <TextureView
+        android:id="@+id/texture_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
     <ToggleButton
         android:id="@+id/toggleSTTButton"
         android:layout_width="wrap_content"

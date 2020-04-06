@@ -14,7 +14,7 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-
+import android.hardware.camera2.*;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -30,6 +30,7 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         speechTTText = (TextView) findViewById(R.id.speechTTText);
+
     }
 
     public void getSpeechInput (View v){
