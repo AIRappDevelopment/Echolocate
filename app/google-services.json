@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "725565405119",
+    "firebase_url": "https://echolocate-f5dc7.firebaseio.com",
+    "project_id": "echolocate-f5dc7",
+    "storage_bucket": "echolocate-f5dc7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:725565405119:android:86b8aacb160387c23c930a",
+        "android_client_info": {
+          "package_name": "com.example.echolocate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "725565405119-ja37g49a0oftgpncd2nebafv2lpvlvga.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBVZyzi2HaxP8xnzFiaWSyWVXMz4mTgW40"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "725565405119-ja37g49a0oftgpncd2nebafv2lpvlvga.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
