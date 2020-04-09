@@ -1,4 +1,4 @@
-package com.example.echolocate;
+package com.example.echolocate.helpers;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,13 +9,13 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-class BypassRecognitionListener implements RecognitionListener {
+public class BypassRecognitionListener implements RecognitionListener {
     private static final String TAG = "RecognitionListener";
     private TextView speechTTText;
     private SpeechRecognizer speechRecognizer;
     private ArrayList<String> resultingStrings;
 
-    BypassRecognitionListener(TextView speechTTText, SpeechRecognizer speechRecognizer){
+    public BypassRecognitionListener(TextView speechTTText, SpeechRecognizer speechRecognizer){
         this.speechTTText = speechTTText;
         this.speechRecognizer = speechRecognizer;
     }
