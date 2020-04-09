@@ -202,7 +202,9 @@ public class CameraPreview extends AppCompatActivity {
                         Arrays.asList(map.getOutputSizes(ImageFormat.JPEG)),
                         new CompareSizesByArea());
                 mImageReader = ImageReader.newInstance(largest.getWidth(), largest.getHeight(),
-                        ImageFormat.JPEG, /*maxImages*/2);
+                        ImageFormat.JPEG,
+maxImages
+2);
                 mImageReader.setOnImageAvailableListener(
                         null, mBackgroundHandler);
 
@@ -419,11 +421,12 @@ public class CameraPreview extends AppCompatActivity {
         }
     }
 
-    /**
+*
      * Shows a {@link Toast} on the UI thread.
      *
      * @param text The message to show
-     */
+
+
     private void showToast(final String text) {
         runOnUiThread(new Runnable() {
             @Override

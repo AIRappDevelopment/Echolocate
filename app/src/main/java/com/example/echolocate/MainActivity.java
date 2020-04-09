@@ -18,7 +18,7 @@ public class MainActivity extends AppCompatActivity {
             public void run() {
              startCamera();
             }
-        }, 5000);
+        }, 0000);
     }
 
     //starts the camera activity
