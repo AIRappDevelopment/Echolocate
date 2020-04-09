@@ -1,6 +1,7 @@
 package com.example.echolocate;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -10,7 +11,10 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
@@ -30,9 +34,17 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         speechTTText = (TextView) findViewById(R.id.speechTTText);
-
     }
 
+    public void setSpeechTTText(int xCoord, int yCoord){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(displayMetrics.heightPixels,
+                displayMetrics.widthPixels);
+        speechTTText.setLayoutParams(layoutParams);
+        speechTTText.setX(xCoord);
+        speechTTText.setY(yCoord);
+    }
     public void getSpeechInput (View v){
         boolean on = ((ToggleButton) v).isChecked();
         if(on) {
