@@ -14,8 +14,9 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.hardware.camera2.*;
-import java.util.ArrayList;
+
+import com.example.echolocate.helpers.BypassRecognitionListener;
+
 import java.util.Locale;
 
 public class CameraActivity extends AppCompatActivity {
@@ -84,19 +85,4 @@ public class CameraActivity extends AppCompatActivity {
     private void RequestPermissions() {
         ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO_PERMISSION_CODE);
     }
-
-     /* unused code, uses speech-to-text w/ pop-up box
-    @Override
-    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case SPEECH_TO_TEXT_REQUEST_CODE:
-                if (resultCode == RESULT_OK && data != null) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    speechTTText.setText(result.get(0));
-                }
-                break;
-        }
-    }
-    */
 }
