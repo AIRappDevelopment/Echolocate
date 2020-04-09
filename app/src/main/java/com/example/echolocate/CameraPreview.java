@@ -2,6 +2,7 @@ package com.example.echolocate;
 //made using https://riptutorial.com/android/example/2021/preview-the-main-camera-in-a-textureview
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -148,6 +149,7 @@ public class CameraPreview extends AppCompatActivity {
             if (!mCameraOpenCloseLock.tryAcquire(2500, TimeUnit.MILLISECONDS)) {
                 throw new RuntimeException("Time out waiting to lock camera opening.");
             }
+            assert manager != null;
             manager.openCamera(mCameraID, mStateCallback, mBackgroundHandler);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -432,4 +434,6 @@ public class CameraPreview extends AppCompatActivity {
             }
         });
     }
+
+
 }

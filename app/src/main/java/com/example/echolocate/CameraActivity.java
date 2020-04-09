@@ -14,7 +14,6 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-import android.hardware.camera2.*;
 import java.util.ArrayList;
 import java.util.Locale;
 
