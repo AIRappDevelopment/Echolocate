@@ -1,6 +1,7 @@
 package com.example.echolocate;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -10,11 +11,20 @@ import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
+import android.util.DisplayMetrics;
 import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+<<<<<<< HEAD
 import java.util.ArrayList;
+=======
+
+import com.example.echolocate.helpers.BypassRecognitionListener;
+
+>>>>>>> e08f7d12c9ed95de523578de3271d825fac41742
 import java.util.Locale;
 
 public class CameraActivity extends AppCompatActivity {
@@ -29,9 +39,17 @@ public class CameraActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
         speechTTText = (TextView) findViewById(R.id.speechTTText);
-
     }
 
+    public void setSpeechTTText(int xCoord, int yCoord){
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(displayMetrics.heightPixels,
+                displayMetrics.widthPixels);
+        speechTTText.setLayoutParams(layoutParams);
+        speechTTText.setX(xCoord);
+        speechTTText.setY(yCoord);
+    }
     public void getSpeechInput (View v){
         boolean on = ((ToggleButton) v).isChecked();
         if(on) {
@@ -83,19 +101,4 @@ public class CameraActivity extends AppCompatActivity {
     private void RequestPermissions() {
         ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO_PERMISSION_CODE);
     }
-
-     /* unused code, uses speech-to-text w/ pop-up box
-    @Override
-    protected void onActivityResult ( int requestCode, int resultCode, Intent data){
-        super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode) {
-            case SPEECH_TO_TEXT_REQUEST_CODE:
-                if (resultCode == RESULT_OK && data != null) {
-                    ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-                    speechTTText.setText(result.get(0));
-                }
-                break;
-        }
-    }
-    */
 }
