@@ -49,7 +49,7 @@ public class CameraActivity extends AppCompatActivity {
     public void getSpeechInput (View v){
         boolean on = ((ToggleButton) v).isChecked();
         if(on) {
-            if (CheckPermissions()) {
+            if (checkPermissions()) {
                 Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
@@ -62,7 +62,7 @@ public class CameraActivity extends AppCompatActivity {
                 speechRecognizer.startListening(speechRecognizerIntent);
                 //assignText(listener.getResults());
             } else {
-                RequestPermissions();
+                requestPermissions();
             }
         }
     }
@@ -89,12 +89,12 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
-    public boolean CheckPermissions() {
+    public boolean checkPermissions() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
-    private void RequestPermissions() {
+    private void requestPermissions() {
         ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO}, REQUEST_AUDIO_PERMISSION_CODE);
     }
 }
