@@ -2,6 +2,8 @@ package com.example.echolocate;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraX;
+import androidx.camera.core.ImageAnalysis;
+import androidx.camera.core.ImageAnalysisConfig;
 import androidx.camera.core.Preview;
 import androidx.camera.core.PreviewConfig;
 import androidx.core.app.ActivityCompat;
@@ -19,6 +21,9 @@ import android.view.TextureView;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+import com.example.echolocate.helpers.VisionAnalyzer;
+import com.google.firebase.ml.vision.FirebaseVision;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 
 public class VisionActivity extends AppCompatActivity {
@@ -28,8 +33,11 @@ public class VisionActivity extends AppCompatActivity {
 
     FirebaseVisionFaceDetectorOptions realTimeOpts =
             new FirebaseVisionFaceDetectorOptions.Builder()
-                    .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CONTOURS)
+                    .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
                     .build();
+
+    FirebaseVisionFaceDetector detector = FirebaseVision.getInstance()
+            .getVisionFaceDetector(realTimeOpts);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +73,10 @@ public class VisionActivity extends AppCompatActivity {
                         updateTransform();
                     }
                 });
-        CameraX.bindToLifecycle((LifecycleOwner)this, preview);
+
+        ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder().setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE).build();
+        ImageAnalysis imageAnalysis = new ImageAnalysis(iaConfig);
+        imageAnalysis.setAnalyzer(new VisionAnalyzer());
     }
 
     private void updateTransform(){
