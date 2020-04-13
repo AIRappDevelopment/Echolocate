@@ -18,13 +18,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
-<<<<<<< HEAD
 import java.util.ArrayList;
-=======
-
 import com.example.echolocate.helpers.BypassRecognitionListener;
-
->>>>>>> e08f7d12c9ed95de523578de3271d825fac41742
 import java.util.Locale;
 
 public class CameraActivity extends AppCompatActivity {
@@ -50,6 +45,7 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText.setX(xCoord);
         speechTTText.setY(yCoord);
     }
+
     public void getSpeechInput (View v){
         boolean on = ((ToggleButton) v).isChecked();
         if(on) {
