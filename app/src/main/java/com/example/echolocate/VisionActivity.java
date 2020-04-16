@@ -24,14 +24,19 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import com.example.echolocate.helpers.VisionAnalyzer;
+
 import com.google.firebase.ml.vision.FirebaseVision;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 
-public class VisionActivity extends AppCompatActivity {
+import java.util.concurrent.Executor;
+import java.util.concurrent.Executors;
 
+
+public class VisionActivity extends AppCompatActivity {
+    Executor executor = Executors.newSingleThreadExecutor();
     private static final int REQUEST_CAMERA_PERMISSION_CODE = 2;
     TextureView cameraView;
 
@@ -80,7 +85,8 @@ public class VisionActivity extends AppCompatActivity {
 
         ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder().setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE).build();
         ImageAnalysis imageAnalysis = new ImageAnalysis(iaConfig);
-        imageAnalysis.setAnalyzer(new VisionAnalyzer());
+        imageAnalysis.setAnalyzer(executor, new VisionAnalyzer());
+        CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 
     private void updateTransform(){
@@ -110,14 +116,9 @@ public class VisionActivity extends AppCompatActivity {
             default:
                 return;
         }
-
         mx.postRotate((float)rotationDgr, cX, cY);
         cameraView.setTransform(mx);
     }
-
-
-
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -144,35 +145,4 @@ public class VisionActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(VisionActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION_CODE);
     }
 
-    static class VisionAnalyzer implements ImageAnalysis.Analyzer{
-
-        private int degreesToFirebaseRotation(int degrees) {
-            switch (degrees) {
-                case 0:
-                    return FirebaseVisionImageMetadata.ROTATION_0;
-                case 90:
-                    return FirebaseVisionImageMetadata.ROTATION_90;
-                case 180:
-                    return FirebaseVisionImageMetadata.ROTATION_180;
-                case 270:
-                    return FirebaseVisionImageMetadata.ROTATION_270;
-                default:
-                    throw new IllegalArgumentException(
-                            "Rotation must be 0, 90, 180, or 270.");
-            }
-        }
-
-        @Override
-        public void analyze(ImageProxy imageProxy, int degrees) {
-            if (imageProxy == null || imageProxy.getImage() == null) {
-                return;
-            }
-            Image mediaImage = imageProxy.getImage();
-            int rotation = degreesToFirebaseRotation(degrees);
-            FirebaseVisionImage image =
-                    FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
-            // Pass image to an ML Kit Vision API
-            // ...
-        }
-    }
 }
