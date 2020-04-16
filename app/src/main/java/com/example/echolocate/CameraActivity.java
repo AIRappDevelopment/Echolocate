@@ -36,6 +36,11 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText = (TextView) findViewById(R.id.speechTTText);
     }
 
+    /**
+     * Sets the parameters actively of a textView
+     * @param xCoord
+     * @param yCoord
+     */
     public void setSpeechTTText(int xCoord, int yCoord){
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
@@ -46,16 +51,22 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText.setY(yCoord);
     }
 
+    /**
+     *Gets Speech to Text Converstion
+     * @param v
+     */
     public void getSpeechInput (View v){
         boolean on = ((ToggleButton) v).isChecked();
         if(on) {
             if (checkPermissions()) {
+                //creates a speech recognizer intent and sets its settings
                 Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
                 speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
                 speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
                 speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
                 speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getApplicationContext().getPackageName());
 
+                //Adds a listener to run passively in the background
                 speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
                 BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, speechRecognizer);
                 speechRecognizer.setRecognitionListener(listener);

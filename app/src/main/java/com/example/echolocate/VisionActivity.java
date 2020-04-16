@@ -34,17 +34,23 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-
+/**
+ * Currently place holder activity
+ * Runs and tests face detection
+ * done with the help of firebase.google.com
+ */
 public class VisionActivity extends AppCompatActivity {
     Executor executor = Executors.newSingleThreadExecutor();
     private static final int REQUEST_CAMERA_PERMISSION_CODE = 2;
     TextureView cameraView;
 
+    //Allows options to be selected
     FirebaseVisionFaceDetectorOptions realTimeOpts =
             new FirebaseVisionFaceDetectorOptions.Builder()
                     .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
                     .build();
 
+    //creates detector from the options selected
     FirebaseVisionFaceDetector detector = FirebaseVision.getInstance()
             .getVisionFaceDetector(realTimeOpts);
 
@@ -54,6 +60,7 @@ public class VisionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vision);
         cameraView = findViewById(R.id.camera_texture_view);
 
+        //if permissions are met start the Camera
         if(checkPermissions()){
             startCamera();
         }else{
@@ -61,12 +68,16 @@ public class VisionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Method starts camera preview and adds analyzer to the lifecycle
+     */
     private void startCamera(){
         CameraX.unbindAll();
 
         Rational aspectRatio = new Rational (cameraView.getWidth(), cameraView.getHeight());
         Size screen = new Size(cameraView.getWidth(), cameraView.getHeight()); //size of the screen
 
+        //configures the preview
         PreviewConfig pConfig = new PreviewConfig.Builder().setTargetResolution(screen).build();
         Preview preview = new Preview(pConfig);
         preview.setOnPreviewOutputUpdateListener(
@@ -77,18 +88,21 @@ public class VisionActivity extends AppCompatActivity {
                         ViewGroup parent = (ViewGroup) cameraView.getParent();
                         parent.removeView(cameraView);
                         parent.addView(cameraView, 0);
-
                         cameraView.setSurfaceTexture(output.getSurfaceTexture());
                         updateTransform();
                     }
                 });
 
+        //configures the image analyzer
         ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder().setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE).build();
         ImageAnalysis imageAnalysis = new ImageAnalysis(iaConfig);
-        imageAnalysis.setAnalyzer(executor, new VisionAnalyzer());
+        imageAnalysis.setAnalyzer(executor, new VisionAnalyzer(detector));
+
+        //binds the settings to the Camera
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 
+    //function that accounts for rotation of the phone
     private void updateTransform(){
         Matrix mx = new Matrix();
         float w = cameraView.getMeasuredWidth();
@@ -120,6 +134,12 @@ public class VisionActivity extends AppCompatActivity {
         cameraView.setTransform(mx);
     }
 
+    /**
+     * Sends feedback on permission request
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
@@ -136,11 +156,18 @@ public class VisionActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks the permissions
+     * @return
+     */
     public boolean checkPermissions() {
         int result = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
         return result == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Requests the permissions
+     */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(VisionActivity.this, new String[]{Manifest.permission.CAMERA}, REQUEST_CAMERA_PERMISSION_CODE);
     }

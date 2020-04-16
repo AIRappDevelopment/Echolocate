@@ -17,13 +17,23 @@ import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
+/**
+ * Custom analyzer created to find faces
+ * Done with the help of firebase.google.com + https://heartbeat.fritz.ai/blink-detection-on-android-using-firebase-ml-kits-face-detection-api-6d09823db535
+ */
 public class VisionAnalyzer implements ImageAnalysis.Analyzer{
     FirebaseVisionFaceDetector detector;
 
-    VisionAnalyzer(FirebaseVisionFaceDetector detector){
+    public VisionAnalyzer(FirebaseVisionFaceDetector detector){
         super();
         this.detector = detector;
     }
+
+    /**
+     * accounts for phone rotation and adjusts camera image
+     * @param degrees
+     * @return
+     */
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {
             case 0:
@@ -40,6 +50,11 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
         }
     }
 
+    /**
+     * Gets the image from CameraX, detects face, and decides what to do, logic layer
+     * @param imageProxy
+     * @param degrees
+     */
     @Override
     public void analyze(ImageProxy imageProxy, int degrees) {
         if (imageProxy == null || imageProxy.getImage() == null) {
@@ -53,7 +68,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         for(FirebaseVisionFace face:firebaseVisionFaces){
-  
+
                         }
                     }
                 })
@@ -63,6 +78,5 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                         e.printStackTrace();
                     }
                 });
-
     }
 }
