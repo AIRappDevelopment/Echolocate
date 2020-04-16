@@ -1,4 +1,5 @@
 package com.example.echolocate;
+
 //made using https://inducesmile.com/android/android-camera2-api-example-tutorial/
 
 import android.Manifest;
@@ -29,7 +30,6 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
-import java.io.File;
 import java.util.Arrays;
 
 public class CameraPreview extends AppCompatActivity {
@@ -49,31 +49,35 @@ public class CameraPreview extends AppCompatActivity {
     protected CameraCaptureSession cameraCaptureSessions;
     protected CaptureRequest.Builder captureRequestBuilder;
     private Size imageDimension;
-    private ImageReader imageReader;
-    private File file;
     private static final int REQUEST_CAMERA_PERMISSION = 200;
     private Handler mBackgroundHandler;
     private HandlerThread mBackgroundThread;
 
+    /**
+     * runs when the application is opened, sets ContentView and textureView
+     * @param savedInstanceState the savedInstanceState of the application
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        textureView = (TextureView) findViewById(R.id.texture);
+        textureView = findViewById(R.id.texture);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
     }
 
     TextureView.SurfaceTextureListener textureListener = new TextureView.SurfaceTextureListener() {
+        /**
+         * creates a new SurfaceTextureListener and opens the camera device
+         */
         @Override
         public void onSurfaceTextureAvailable(SurfaceTexture surface, int width, int height) {
-            //open your camera here
             openCamera();
         }
 
         @Override
         public void onSurfaceTextureSizeChanged(SurfaceTexture surface, int width, int height) {
-            // Transform you image captured size according to the surface width and height
+
         }
 
         @Override
@@ -85,20 +89,32 @@ public class CameraPreview extends AppCompatActivity {
         public void onSurfaceTextureUpdated(SurfaceTexture surface) {
         }
     };
+
     private final CameraDevice.StateCallback stateCallback = new CameraDevice.StateCallback() {
+        /**
+         * creates the CameraPreview on the screen when the CameraDevice is opened
+         */
         @Override
         public void onOpened(CameraDevice camera) {
-            //This is called when the camera is open
             Log.e(TAG, "onOpened");
             cameraDevice = camera;
             createCameraPreview();
         }
 
+        /**
+         * when the CameraDevice disconnects, closes the CameraDevice
+         * @param camera the CameraDevice that is currently open
+         */
         @Override
         public void onDisconnected(CameraDevice camera) {
             cameraDevice.close();
         }
 
+        /**
+         * when an error occurs, closes the CameraDevice and assigns it to null
+         * @param camera the current CameraDevice in use
+         * @param error the error being thrown in the application
+         */
         @Override
         public void onError(CameraDevice camera, int error) {
             cameraDevice.close();
@@ -107,19 +123,28 @@ public class CameraPreview extends AppCompatActivity {
     };
     final CameraCaptureSession.CaptureCallback captureCallbackListener = new CameraCaptureSession.CaptureCallback() {
         @Override
+
+        /**
+         * creates the CameraPreview again after a capture
+         */
         public void onCaptureCompleted(CameraCaptureSession session, CaptureRequest request, TotalCaptureResult result) {
             super.onCaptureCompleted(session, request, result);
-            Toast.makeText(CameraPreview.this, "Saved:" + file, Toast.LENGTH_SHORT).show();
             createCameraPreview();
         }
     };
 
+    /**
+     * starts a new BackgroundThread
+     */
     protected void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("Camera Background");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
     }
 
+    /**
+     * stops the current BackgroundThread
+     */
     protected void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
         try {
@@ -131,6 +156,9 @@ public class CameraPreview extends AppCompatActivity {
         }
     }
 
+    /**
+     * creates the CameraPreview to be displayed on the screen
+     */
     protected void createCameraPreview() {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
@@ -142,11 +170,9 @@ public class CameraPreview extends AppCompatActivity {
             cameraDevice.createCaptureSession(Arrays.asList(surface), new CameraCaptureSession.StateCallback() {
                 @Override
                 public void onConfigured(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    //The camera is already closed
                     if (null == cameraDevice) {
                         return;
                     }
-                    // When the session is ready, we start displaying the preview.
                     cameraCaptureSessions = cameraCaptureSession;
                     updatePreview();
                 }
@@ -161,6 +187,9 @@ public class CameraPreview extends AppCompatActivity {
         }
     }
 
+    /**
+     * opens the camera to be used by the application
+     */
     private void openCamera() {
         CameraManager manager = (CameraManager) getSystemService(Context.CAMERA_SERVICE);
         Log.e(TAG, "is camera open");
@@ -182,6 +211,9 @@ public class CameraPreview extends AppCompatActivity {
         Log.e(TAG, "openCamera X");
     }
 
+    /**
+     * updates the preview on the screen
+     */
     protected void updatePreview() {
         if (null == cameraDevice) {
             Log.e(TAG, "updatePreview error, return");
@@ -194,28 +226,25 @@ public class CameraPreview extends AppCompatActivity {
         }
     }
 
-    private void closeCamera() {
-        if (null != cameraDevice) {
-            cameraDevice.close();
-            cameraDevice = null;
-        }
-        if (null != imageReader) {
-            imageReader.close();
-            imageReader = null;
-        }
-    }
-
+    /**
+     * if permission is not granted by the user, the application displays a message, then stops running
+     * @param requestCode
+     * @param permissions
+     * @param grantResults
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                // close the app
-                Toast.makeText(CameraPreview.this, "Sorry!!!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
+                Toast.makeText(CameraPreview.this, "Sorry!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
                 finish();
             }
         }
     }
 
+    /**
+     * when the camera is resumed, the camera is opened and the textureView is set again
+     */
     @Override
     protected void onResume() {
         super.onResume();
@@ -228,10 +257,12 @@ public class CameraPreview extends AppCompatActivity {
         }
     }
 
+    /**
+     * when the application is paused, the BackgroundThread is stopped
+     */
     @Override
     protected void onPause() {
         Log.e(TAG, "onPause");
-        //closeCamera();
         stopBackgroundThread();
         super.onPause();
     }
