@@ -2,14 +2,28 @@ package com.example.echolocate.helpers;
 
 import android.media.Image;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
+import com.google.firebase.ml.vision.face.FirebaseVisionFace;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
+import com.google.firebase.ml.vision.objects.FirebaseVisionObject;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageProxy;
 
 public class VisionAnalyzer implements ImageAnalysis.Analyzer{
+    FirebaseVisionFaceDetector detector;
 
+    VisionAnalyzer(FirebaseVisionFaceDetector detector){
+        super();
+        this.detector = detector;
+    }
     private int degreesToFirebaseRotation(int degrees) {
         switch (degrees) {
             case 0:
@@ -33,9 +47,22 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
         }
         Image mediaImage = imageProxy.getImage();
         int rotation = degreesToFirebaseRotation(degrees);
-        FirebaseVisionImage image =
-                FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
-        // Pass image to an ML Kit Vision API
-        // ...
+        FirebaseVisionImage image = FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
+        detector.detectInImage(image)
+                .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionFace>>() {
+                    @Override
+                    public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
+                        for(FirebaseVisionFace face:firebaseVisionFaces){
+  
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        e.printStackTrace();
+                    }
+                });
+
     }
 }
