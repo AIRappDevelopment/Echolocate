@@ -109,7 +109,7 @@ public class CameraPreview extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
 
-        mTextureView = (TextureView) findViewById(R.id.texture);
+        mTextureView = (TextureView) findViewById(R.id.texture_view);
     }
 
     @Override
