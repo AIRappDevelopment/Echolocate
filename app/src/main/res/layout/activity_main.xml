@@ -7,6 +7,12 @@
     android:background="@drawable/gradient"
     tools:context=".MainActivity">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:srcCompat="@drawable/batlogo" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
