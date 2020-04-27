@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Matrix;
 import android.media.Image;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Rational;
 import android.util.Size;
 import android.view.Surface;
@@ -50,8 +51,9 @@ public class VisionActivity extends AppCompatActivity {
     //Allows options to be selected
     FirebaseVisionFaceDetectorOptions realTimeOpts =
             new FirebaseVisionFaceDetectorOptions.Builder()
-                    .setLandmarkMode(FirebaseVisionFaceDetectorOptions.NO_LANDMARKS)
-                    .setContourMode(FirebaseVisionFaceDetectorOptions.NO_CONTOURS)
+                    .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
+                    .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
+                    .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
                     .build();
 
     //creates detector from the options selected
@@ -64,8 +66,6 @@ public class VisionActivity extends AppCompatActivity {
         setContentView(R.layout.activity_vision);
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
-        graphicOverlay.setCameraInfo(cameraView.getWidth(), cameraView.getHeight(), CameraSource.CAMERA_FACING_BACK);
-
         //if permissions are met start the Camera
         if(checkPermissions()){
             startCamera();
@@ -80,12 +80,8 @@ public class VisionActivity extends AppCompatActivity {
     private void startCamera(){
         CameraX.unbindAll();
 
-
-        Rational aspectRatio = new Rational (cameraView.getWidth(), cameraView.getHeight());
-        Size screen = new Size(cameraView.getWidth(), cameraView.getHeight()); //size of the screen
-
         //configures the preview
-        PreviewConfig pConfig = new PreviewConfig.Builder().setTargetResolution(screen).build();
+        PreviewConfig pConfig = new PreviewConfig.Builder().build();
         Preview preview = new Preview(pConfig);
         //to update the surface texture we  have to destroy it first then re-add it
         preview.setOnPreviewOutputUpdateListener(
@@ -96,7 +92,6 @@ public class VisionActivity extends AppCompatActivity {
                     cameraView.setSurfaceTexture(output.getSurfaceTexture());
                     updateTransform();
                 });
-        graphicOverlay.clear();
 
         //configures the image analyzer
         ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder().setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE).build();

@@ -3,7 +3,9 @@ package com.example.echolocate.helpers;
 import android.graphics.Rect;
 import android.media.Image;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.echolocate.VisionActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
@@ -72,10 +74,8 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         for(FirebaseVisionFace face:firebaseVisionFaces){
-                            graphicOverlay.clear();
-                            Rect bounds = face.getBoundingBox();
-                            RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
-                            graphicOverlay.add(rectOverlay);
+                           Log.v("blink", String.valueOf(face.getLeftEyeOpenProbability() > 0.5));
+
                         }
                     }
                 })
