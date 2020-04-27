@@ -205,7 +205,7 @@ public class CameraPreview extends AppCompatActivity {
                 ActivityCompat.requestPermissions(CameraPreview.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
                 return;
             }
-            transformImage(textureView.getWidth(), textureView.getHeight());
+            transformImage(textureView.getHeight(), textureView.getWidth());
             manager.openCamera(cameraId, stateCallback, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -269,6 +269,11 @@ public class CameraPreview extends AppCompatActivity {
         super.onPause();
     }
 
+    /**
+     * transforms the textureView so that it is landscape
+     * @param width the width of the textureView
+     * @param height the height of the textureView
+     */
     private void transformImage(int width, int height) {
 
         if (textureView == null) {
