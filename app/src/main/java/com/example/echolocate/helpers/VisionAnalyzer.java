@@ -24,11 +24,13 @@ import androidx.camera.core.ImageProxy;
  * Done with the help of firebase.google.com + https://heartbeat.fritz.ai/blink-detection-on-android-using-firebase-ml-kits-face-detection-api-6d09823db535
  */
 public class VisionAnalyzer implements ImageAnalysis.Analyzer{
+    GraphicOverlay graphicOverlay;
     FirebaseVisionFaceDetector detector;
 
-    public VisionAnalyzer(FirebaseVisionFaceDetector detector){
+    public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay){
         super();
         this.detector = detector;
+        this.graphicOverlay = graphicOverlay;
     }
 
     /**
@@ -70,9 +72,10 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         for(FirebaseVisionFace face:firebaseVisionFaces){
+                            graphicOverlay.clear();
                             Rect bounds = face.getBoundingBox();
-                            Log.v("coordinates", String.valueOf(bounds.bottom));
-                            Log.v("coordinates", String.valueOf(bounds.top));
+                            RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
+                            graphicOverlay.add(rectOverlay);
                         }
                     }
                 })
