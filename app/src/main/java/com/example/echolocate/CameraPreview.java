@@ -24,6 +24,7 @@ import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 import android.view.TextureView;
 import android.widget.Toast;
 
@@ -205,7 +206,6 @@ public class CameraPreview extends AppCompatActivity {
                 ActivityCompat.requestPermissions(CameraPreview.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
                 return;
             }
-            transformImage(textureView.getHeight(), textureView.getWidth());
             manager.openCamera(cameraId, stateCallback, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
@@ -274,6 +274,34 @@ public class CameraPreview extends AppCompatActivity {
      * @param width the width of the textureView
      * @param height the height of the textureView
      */
-    
+    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+        if (isPreviewRunning) {
+            mCamera.stopPreview();
+        }
+
+        Parameters parameters = mCamera.getParameters();
+        Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
+
+        if(display.getRotation() == Surface.ROTATION_0) {
+            parameters.setPreviewSize(height, width);
+            mCamera.setDisplayOrientation(90);
+        }
+
+        if(display.getRotation() == Surface.ROTATION_90) {
+            parameters.setPreviewSize(width, height);
+        }
+
+        if(display.getRotation() == Surface.ROTATION_180) {
+            parameters.setPreviewSize(height, width);
+        }
+
+        if(display.getRotation() == Surface.ROTATION_270) {
+            parameters.setPreviewSize(width, height);
+            mCamera.setDisplayOrientation(180);
+        }
+
+        mCamera.setParameters(parameters);
+        previewCamera();
+    }
 
 }
