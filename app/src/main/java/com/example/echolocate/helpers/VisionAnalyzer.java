@@ -1,6 +1,8 @@
 package com.example.echolocate.helpers;
 
+import android.graphics.Rect;
 import android.media.Image;
+import android.util.Log;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -68,7 +70,9 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         for(FirebaseVisionFace face:firebaseVisionFaces){
-
+                            Rect bounds = face.getBoundingBox();
+                            Log.v("coordinates", String.valueOf(bounds.bottom));
+                            Log.v("coordinates", String.valueOf(bounds.top));
                         }
                     }
                 })
