@@ -274,30 +274,6 @@ public class CameraPreview extends AppCompatActivity {
      * @param width the width of the textureView
      * @param height the height of the textureView
      */
-    private void transformImage(int width, int height) {
-
-        if (textureView == null) {
-            return;
-        } else try {
-            {
-                Matrix matrix = new Matrix();
-                int rotation = getWindowManager().getDefaultDisplay().getRotation();
-                RectF textureRectF = new RectF(0, 0, width, height);
-                RectF previewRectF = new RectF(0, 0, textureView.getHeight(), textureView.getWidth());
-                float centerX = textureRectF.centerX();
-                float centerY = textureRectF.centerY();
-                if (rotation == Surface.ROTATION_90 || rotation == Surface.ROTATION_270) {
-                    previewRectF.offset(centerX - previewRectF.centerX(), centerY - previewRectF.centerY());
-                    matrix.setRectToRect(textureRectF, previewRectF, Matrix.ScaleToFit.FILL);
-                    float scale = Math.max((float) width / width, (float) height / width);
-                    matrix.postScale(scale, scale, centerX, centerY);
-                    matrix.postRotate(90 * (rotation - 2), centerX, centerY);
-                }
-                textureView.setTransform(matrix);
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
+    
 
 }
