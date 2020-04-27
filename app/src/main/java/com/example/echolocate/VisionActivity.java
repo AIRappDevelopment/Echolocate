@@ -80,17 +80,14 @@ public class VisionActivity extends AppCompatActivity {
         //configures the preview
         PreviewConfig pConfig = new PreviewConfig.Builder().setTargetResolution(screen).build();
         Preview preview = new Preview(pConfig);
+        //to update the surface texture we  have to destroy it first then re-add it
         preview.setOnPreviewOutputUpdateListener(
-                new Preview.OnPreviewOutputUpdateListener() {
-                    //to update the surface texture we  have to destroy it first then re-add it
-                    @Override
-                    public void onUpdated(Preview.PreviewOutput output){
-                        ViewGroup parent = (ViewGroup) cameraView.getParent();
-                        parent.removeView(cameraView);
-                        parent.addView(cameraView, 0);
-                        cameraView.setSurfaceTexture(output.getSurfaceTexture());
-                        updateTransform();
-                    }
+                output -> {
+                    ViewGroup parent = (ViewGroup) cameraView.getParent();
+                    parent.removeView(cameraView);
+                    parent.addView(cameraView, 0);
+                    cameraView.setSurfaceTexture(output.getSurfaceTexture());
+                    updateTransform();
                 });
 
         //configures the image analyzer
