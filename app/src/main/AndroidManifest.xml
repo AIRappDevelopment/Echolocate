@@ -30,9 +30,5 @@
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="face" />
     </application>
-    <uses-feature android:name="android.hardware.camera2" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO" />
-    <uses-permission android:name="android.permission.INTERNET" />
 
 </manifest>

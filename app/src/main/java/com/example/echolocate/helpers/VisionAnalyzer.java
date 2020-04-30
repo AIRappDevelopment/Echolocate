@@ -3,7 +3,9 @@ package com.example.echolocate.helpers;
 import android.graphics.Rect;
 import android.media.Image;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.echolocate.VisionActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
@@ -24,11 +26,13 @@ import androidx.camera.core.ImageProxy;
  * Done with the help of firebase.google.com + https://heartbeat.fritz.ai/blink-detection-on-android-using-firebase-ml-kits-face-detection-api-6d09823db535
  */
 public class VisionAnalyzer implements ImageAnalysis.Analyzer{
+    GraphicOverlay graphicOverlay;
     FirebaseVisionFaceDetector detector;
 
-    public VisionAnalyzer(FirebaseVisionFaceDetector detector){
+    public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay){
         super();
         this.detector = detector;
+        this.graphicOverlay = graphicOverlay;
     }
 
     /**
@@ -70,9 +74,8 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         for(FirebaseVisionFace face:firebaseVisionFaces){
-                            Rect bounds = face.getBoundingBox();
-                            Log.v("coordinates", String.valueOf(bounds.bottom));
-                            Log.v("coordinates", String.valueOf(bounds.top));
+                           Log.v("blink", String.valueOf(face.getLeftEyeOpenProbability() > 0.5));
+
                         }
                     }
                 })
