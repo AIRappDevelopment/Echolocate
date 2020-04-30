@@ -6,6 +6,7 @@ import android.Manifest;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.graphics.SurfaceTexture;
+import android.hardware.Camera;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -21,6 +22,7 @@ import android.os.HandlerThread;
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
+import android.view.Display;
 import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
@@ -29,6 +31,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
+import java.security.Policy;
 import java.util.Arrays;
 
 public class CameraPreview extends AppCompatActivity {
@@ -266,39 +269,6 @@ public class CameraPreview extends AppCompatActivity {
         super.onPause();
     }
 
-    /**
-     * transforms the textureView so that it is landscape
-     * @param width the width of the textureView
-     * @param height the height of the textureView
-     */
-//    public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-//        if (isPreviewRunning) {
-//            mCamera.stopPreview();
-//        }
-//
-//        Parameters parameters = mCamera.getParameters();
-//        Display display = ((WindowManager)getSystemService(WINDOW_SERVICE)).getDefaultDisplay();
-//
-//        if(display.getRotation() == Surface.ROTATION_0) {
-//            parameters.setPreviewSize(height, width);
-//            mCamera.setDisplayOrientation(90);
-//        }
-//
-//        if(display.getRotation() == Surface.ROTATION_90) {
-//            parameters.setPreviewSize(width, height);
-//        }
-//
-//        if(display.getRotation() == Surface.ROTATION_180) {
-//            parameters.setPreviewSize(height, width);
-//        }
-//
-//        if(display.getRotation() == Surface.ROTATION_270) {
-//            parameters.setPreviewSize(width, height);
-//            mCamera.setDisplayOrientation(180);
-//        }
-//
-//        mCamera.setParameters(parameters);
-//        previewCamera();
 //    }
 
 }
