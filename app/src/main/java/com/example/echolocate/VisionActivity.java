@@ -1,6 +1,8 @@
 package com.example.echolocate;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.camera.core.AspectRatio;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageAnalysisConfig;
@@ -80,21 +82,30 @@ public class VisionActivity extends AppCompatActivity {
     private void startCamera(){
         CameraX.unbindAll();
 
+        AspectRatio aspectRatio = AspectRatio.RATIO_16_9;
+        Size screen = new Size(cameraView.getWidth(), cameraView.getHeight()); //size of the screen
+
         //configures the preview
-        PreviewConfig pConfig = new PreviewConfig.Builder().build();
+        PreviewConfig pConfig = new PreviewConfig.Builder()
+                .setTargetResolution(screen).build();
         Preview preview = new Preview(pConfig);
         //to update the surface texture we  have to destroy it first then re-add it
         preview.setOnPreviewOutputUpdateListener(
-                output -> {
-                    ViewGroup parent = (ViewGroup) cameraView.getParent();
-                    parent.removeView(cameraView);
-                    parent.addView(cameraView, 0);
-                    cameraView.setSurfaceTexture(output.getSurfaceTexture());
-                    updateTransform();
+                new Preview.OnPreviewOutputUpdateListener() {
+                    @Override
+                    public void onUpdated(@NonNull Preview.PreviewOutput output) {
+                        ViewGroup parent = (ViewGroup) cameraView.getParent();
+                        parent.removeView(cameraView);
+                        parent.addView(cameraView, 0);
+                        cameraView.setSurfaceTexture(output.getSurfaceTexture());
+                        updateTransform();
+                    }
                 });
 
         //configures the image analyzer
-        ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder().setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE).build();
+        ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder()
+                .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
+                .build();
         ImageAnalysis imageAnalysis = new ImageAnalysis(iaConfig);
         imageAnalysis.setAnalyzer(executor, new VisionAnalyzer(detector, graphicOverlay));
 

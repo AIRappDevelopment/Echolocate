@@ -73,10 +73,12 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionFace>>() {
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
+                        int count = 0;
                         for(FirebaseVisionFace face:firebaseVisionFaces){
-                           Log.v("blink", String.valueOf(face.getLeftEyeOpenProbability() > 0.5));
+                           count++;
 
                         }
+                        Log.v("blink", String.valueOf(count));
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
