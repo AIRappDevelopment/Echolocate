@@ -17,7 +17,6 @@ import android.hardware.camera2.CameraMetadata;
 import android.hardware.camera2.CaptureRequest;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
@@ -161,7 +160,6 @@ public class CameraPreview extends AppCompatActivity {
     /**
      * creates the CameraPreview to be displayed on the screen
      */
-    @android.support.annotation.RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
     protected void createCameraPreview() {
         try {
             SurfaceTexture texture = textureView.getSurfaceTexture();
