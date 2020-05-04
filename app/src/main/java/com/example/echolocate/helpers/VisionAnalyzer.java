@@ -28,6 +28,7 @@ import androidx.camera.core.ImageProxy;
 public class VisionAnalyzer implements ImageAnalysis.Analyzer{
     GraphicOverlay graphicOverlay;
     FirebaseVisionFaceDetector detector;
+    boolean isaAnalyzing = false;
 
     public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay){
         super();
@@ -63,28 +64,43 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
      */
     @Override
     public void analyze(ImageProxy imageProxy, int degrees) {
+        if(isaAnalyzing){
+            return;
+        }
+        isaAnalyzing = true;
         if (imageProxy == null || imageProxy.getImage() == null) {
             return;
         }
         Image mediaImage = imageProxy.getImage();
         int rotation = degreesToFirebaseRotation(degrees);
         FirebaseVisionImage image = FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
+//        Log.v("yeet", String.valueOf(mediaImage.getHeight()));
+//        Log.v("yeet", String.valueOf(mediaImage.getWidth()));
         detector.detectInImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionFace>>() {
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
-                        int count = 0;
                         for(FirebaseVisionFace face:firebaseVisionFaces){
-                           count++;
-
+                            graphicOverlay.clear();
+                            Rect bounds = face.getBoundingBox();
+                            int newLeft = (int)(((double)bounds.left) * 2.25);
+                            int newRight = (int)(((double)bounds.right) * 2.25);
+                            int newTop = bounds.top * 3;
+                            int newBottom = bounds.bottom * 3;
+                            bounds.set(newLeft, newTop, newRight, newBottom);
+                            Log.v("coordinates", String.valueOf(bounds.bottom));
+                            Log.v("coordinates", String.valueOf(bounds.top));
+                            RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
+                            graphicOverlay.add(rectOverlay);
                         }
-                        Log.v("blink", String.valueOf(count));
+                        isaAnalyzing = false;
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         e.printStackTrace();
+                        isaAnalyzing = false;
                     }
                 });
     }

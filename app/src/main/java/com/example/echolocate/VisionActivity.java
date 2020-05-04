@@ -3,6 +3,7 @@ package com.example.echolocate;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.AspectRatio;
+import androidx.camera.core.CameraInfoUnavailableException;
 import androidx.camera.core.CameraX;
 import androidx.camera.core.ImageAnalysis;
 import androidx.camera.core.ImageAnalysisConfig;
@@ -83,11 +84,12 @@ public class VisionActivity extends AppCompatActivity {
         CameraX.unbindAll();
 
         AspectRatio aspectRatio = AspectRatio.RATIO_16_9;
-        Size screen = new Size(cameraView.getWidth(), cameraView.getHeight()); //size of the screen
-
+        Size screen = new Size(1080, 1920); //size of the screen
         //configures the preview
         PreviewConfig pConfig = new PreviewConfig.Builder()
-                .setTargetResolution(screen).build();
+                .setTargetResolution(screen)
+                //.setLensFacing(CameraX.LensFacing.FRONT)
+                .build();
         Preview preview = new Preview(pConfig);
         //to update the surface texture we  have to destroy it first then re-add it
         preview.setOnPreviewOutputUpdateListener(
@@ -98,7 +100,7 @@ public class VisionActivity extends AppCompatActivity {
                         parent.removeView(cameraView);
                         parent.addView(cameraView, 0);
                         cameraView.setSurfaceTexture(output.getSurfaceTexture());
-                        updateTransform();
+                        //updateTransform();
                     }
                 });
 
@@ -116,8 +118,8 @@ public class VisionActivity extends AppCompatActivity {
     //function that accounts for rotation of the phone
     private void updateTransform(){
         Matrix mx = new Matrix();
-        float w = cameraView.getMeasuredWidth();
-        float h = cameraView.getMeasuredHeight();
+        float w = 1080;
+        float h = 1920;
 
         float cX = w / 2f;
         float cY = h / 2f;
