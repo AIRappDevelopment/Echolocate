@@ -76,6 +76,11 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText = (TextView) findViewById(R.id.speechTTText);
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
+        if(checkPermissions()){
+            startCamera();
+        }else{
+            requestPermissions();
+        }
     }
 
     /**
@@ -91,11 +96,7 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText.setLayoutParams(layoutParams);
         speechTTText.setX(xCoord);
         speechTTText.setY(yCoord);
-        if(checkPermissions()){
-            startCamera();
-        }else{
-            requestPermissions();
-        }
+
 
     }
 
@@ -121,7 +122,7 @@ public class CameraActivity extends AppCompatActivity {
         } else {
             requestPermissions();
         }
-        
+
     }
 
     /**
