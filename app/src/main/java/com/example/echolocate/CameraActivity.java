@@ -96,8 +96,6 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText.setLayoutParams(layoutParams);
         speechTTText.setX(xCoord);
         speechTTText.setY(yCoord);
-
-
     }
 
     /**

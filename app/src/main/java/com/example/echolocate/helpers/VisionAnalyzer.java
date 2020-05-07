@@ -16,6 +16,7 @@ import com.google.firebase.ml.vision.objects.FirebaseVisionObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
@@ -28,7 +29,7 @@ import androidx.camera.core.ImageProxy;
 public class VisionAnalyzer implements ImageAnalysis.Analyzer{
     GraphicOverlay graphicOverlay;
     FirebaseVisionFaceDetector detector;
-    boolean isaAnalyzing = false;
+    AtomicBoolean isAnalyzing = new AtomicBoolean(false);
 
     public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay){
         super();
@@ -64,18 +65,16 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
      */
     @Override
     public void analyze(ImageProxy imageProxy, int degrees) {
-        if(isaAnalyzing){
+        if(isAnalyzing.get()){
             return;
         }
-        isaAnalyzing = true;
+        isAnalyzing.set(true);
         if (imageProxy == null || imageProxy.getImage() == null) {
             return;
         }
         Image mediaImage = imageProxy.getImage();
         int rotation = degreesToFirebaseRotation(degrees);
         FirebaseVisionImage image = FirebaseVisionImage.fromMediaImage(mediaImage, rotation);
-//        Log.v("yeet", String.valueOf(mediaImage.getHeight()));
-//        Log.v("yeet", String.valueOf(mediaImage.getWidth()));
         detector.detectInImage(image)
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionFace>>() {
                     @Override
@@ -93,14 +92,14 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
                             graphicOverlay.add(rectOverlay);
                         }
-                        isaAnalyzing = false;
+                        isAnalyzing.set(false);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         e.printStackTrace();
-                        isaAnalyzing = false;
+                        isAnalyzing.set(false);
                     }
                 });
     }
