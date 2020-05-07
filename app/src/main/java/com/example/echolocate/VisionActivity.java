@@ -81,7 +81,7 @@ public class VisionActivity extends AppCompatActivity {
      * Method starts camera preview and adds analyzer to the lifecycle
      */
     private void startCamera(){
-        CameraX.unbindAll();
+            CameraX.unbindAll();
 
         AspectRatio aspectRatio = AspectRatio.RATIO_16_9;
         Size screen = new Size(1080, 1920); //size of the screen
