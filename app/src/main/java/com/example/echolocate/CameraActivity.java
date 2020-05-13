@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
@@ -45,6 +46,7 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 import java.util.Locale;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class CameraActivity extends AppCompatActivity {
 
@@ -56,6 +58,7 @@ public class CameraActivity extends AppCompatActivity {
     private SpeechRecognizer speechRecognizer;
     private TextureView cameraView;
     private GraphicOverlay graphicOverlay;
+    private AtomicBoolean isSpeechDetecting;
 
     //Allows options to be selected
     private FirebaseVisionFaceDetectorOptions realTimeOpts =
@@ -76,6 +79,7 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText = (TextView) findViewById(R.id.speechTTText);
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
+        isSpeechDetecting.set(false);
         if(checkPermissions()){
             startCamera();
         }else{
@@ -100,22 +104,22 @@ public class CameraActivity extends AppCompatActivity {
 
     /**
      *Gets Speech to Text Converstion
-     * @param v
      */
-    public void getSpeechInput (View v){
-        if (checkPermissions()) {
+    public void getSpeechInput(){
+        if (checkPermissions() && !isSpeechDetecting.get()) {
             //creates a speech recognizer intent and sets its settings
             Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 5);
+            speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_MAX_RESULTS, 1);
             speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_CALLING_PACKAGE, this.getApplicationContext().getPackageName());
 
             //Adds a listener to run passively in the background
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
-            BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, speechRecognizer);
+            BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, speechRecognizer, isSpeechDetecting);
             speechRecognizer.setRecognitionListener(listener);
             speechRecognizer.startListening(speechRecognizerIntent);
+            isSpeechDetecting.set(true);
             //assignText(listener.getResults());
         } else {
             requestPermissions();
@@ -159,7 +163,7 @@ public class CameraActivity extends AppCompatActivity {
                 .build();
 
         ImageAnalysis imageAnalysis = new ImageAnalysis(iaConfig);
-        imageAnalysis.setAnalyzer(executor, new VisionAnalyzer(detector, graphicOverlay));
+        imageAnalysis.setAnalyzer(executor, new VisionAnalyzer(detector, graphicOverlay, this));
 
         //binds the settings to the Camera
         CameraX.bindToLifecycle(this, preview, imageAnalysis);

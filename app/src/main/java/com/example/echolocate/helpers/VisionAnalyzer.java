@@ -1,17 +1,24 @@
 package com.example.echolocate.helpers;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.media.Image;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
+import android.widget.TextView;
 
+import com.example.echolocate.CameraActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
@@ -26,11 +33,13 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
     GraphicOverlay graphicOverlay;
     FirebaseVisionFaceDetector detector;
     AtomicBoolean isAnalyzing = new AtomicBoolean(false);
+    CameraActivity cameraActivity;
 
-    public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay){
+    public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay, CameraActivity cameraActivity){
         super();
         this.detector = detector;
         this.graphicOverlay = graphicOverlay;
+        this.cameraActivity = cameraActivity;
     }
 
     /**
@@ -78,15 +87,19 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                         graphicOverlay.clear();
                         for(FirebaseVisionFace face:firebaseVisionFaces){
                             Rect bounds = face.getBoundingBox();
+                            int i = face.getTrackingId();
+                            FirebaseVisionFaceLandmark bottomOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM);
+                            FirebaseVisionFaceLandmark leftOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_LEFT);
                             int newLeft = (int)(((double)bounds.left) * 2.25);
                             int newRight = (int)(((double)bounds.right) * 2.25);
                             int newTop = bounds.top * 3;
                             int newBottom = bounds.bottom * 3;
                             bounds.set(newLeft, newTop, newRight, newBottom);
-                            Log.v("coordinates", String.valueOf(bounds.bottom));
-                            Log.v("coordinates", String.valueOf(bounds.top));
+//                            Log.v("coordinates", String.valueOf(bounds.bottom));
+//                            Log.v("coordinates", String.valueOf(bounds.top));
                             RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
                             graphicOverlay.add(rectOverlay);
+                            cameraActivity.getSpeechInput();
                         }
                         isAnalyzing.set(false);
                     }
@@ -98,5 +111,6 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                         isAnalyzing.set(false);
                     }
                 });
+
     }
 }
