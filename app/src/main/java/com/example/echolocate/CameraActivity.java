@@ -169,7 +169,9 @@ public class CameraActivity extends AppCompatActivity {
         CameraX.bindToLifecycle(this, preview, imageAnalysis);
     }
 
-    //function that accounts for rotation of the phone
+    /**
+     * Accounts for rotation of the Phone
+     */
     private void updateTransform(){
         Matrix mx = new Matrix();
         float w = 1080;
@@ -201,8 +203,9 @@ public class CameraActivity extends AppCompatActivity {
         cameraView.setTransform(mx);
     }
 
-    //allows viewing of permission errors
-    //eventually to be deleted
+    /**
+     * allows viewing of permission errors
+     */
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
@@ -220,12 +223,19 @@ public class CameraActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Checks for Audio and Camera Permissions
+     * @return
+     */
     public boolean checkPermissions() {
         int audioRes = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.RECORD_AUDIO);
         int cameraRes = ContextCompat.checkSelfPermission(getApplicationContext(), Manifest.permission.CAMERA);
         return audioRes  == PackageManager.PERMISSION_GRANTED && cameraRes == PackageManager.PERMISSION_GRANTED;
     }
 
+    /**
+     * Requests Audio and Camera Permissions
+     */
     private void requestPermissions() {
         ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA}, REQUEST_AUDIO_CAMERA_PERMISSION_CODE);
     }

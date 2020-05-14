@@ -88,8 +88,10 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                         double maxMouthRatio = 0;
                         int setX = 0;
                         int setY = 0;
-                        for(FirebaseVisionFace face:firebaseVisionFaces){
+                        for(FirebaseVisionFace face: firebaseVisionFaces){
                             Rect bounds = face.getBoundingBox();
+                            Rect mouthBounds = new Rect();
+
                             int i = face.getTrackingId();
 
                             FirebaseVisionFaceLandmark bottomOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM);
@@ -104,7 +106,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
 
                             int mouthLeft = (int) (leftOfMouth.getPosition().getX() * 2.25);
                             int mouthRight = (int) (rightOfMouth.getPosition().getX() * 2.25);
-                            int mouthTop = (bottomOfMouth.getPosition().getY().intValue() + 20) * 3;
+                            int mouthTop = (bottomOfMouth.getPosition().getY().intValue() + 10) * 3;
                             int mouthBottom = bottomOfMouth.getPosition().getY().intValue() * 3;
 
                             int mouthMidY = (int) (leftOfMouth.getPosition().getY() * 3);
@@ -118,14 +120,15 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                                 setY = mouthMidY;
                             }
 
-                            Rect mouthBounds = new Rect();
                             mouthBounds.set(mouthLeft, mouthTop, mouthRight, mouthBottom);
                             bounds.set(newLeft, newTop, newRight, newBottom);
-//                            Log.v("coordinates", String.valueOf(bounds.bottom));
-//                            Log.v("coordinates", String.valueOf(bounds.top));
-                            RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
-                            graphicOverlay.add(new RectOverlay(graphicOverlay, mouthBounds));
-                            graphicOverlay.add(rectOverlay);
+
+                            RectOverlay faceOverlay = new RectOverlay(graphicOverlay, bounds);
+                            RectOverlay mouthOverlay = new RectOverlay(graphicOverlay, mouthBounds);
+
+                            graphicOverlay.add(mouthOverlay);
+                            graphicOverlay.add(faceOverlay);
+
                             cameraActivity.getSpeechInput();
                         }
                         isAnalyzing.set(false);

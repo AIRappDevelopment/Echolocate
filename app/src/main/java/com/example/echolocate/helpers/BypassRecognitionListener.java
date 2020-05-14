@@ -25,7 +25,7 @@ public class BypassRecognitionListener implements RecognitionListener {
 
     @Override
     public void onBeginningOfSpeech() {
-
+        speechTTText.setText("");
     }
 
     @Override
