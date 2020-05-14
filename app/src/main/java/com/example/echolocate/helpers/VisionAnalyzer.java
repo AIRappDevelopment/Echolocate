@@ -85,19 +85,41 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         graphicOverlay.clear();
-                        int maxMouthRatio = 0;
+                        double maxMouthRatio = 0;
+                        int setX = 0;
+                        int setY = 0;
                         for(FirebaseVisionFace face:firebaseVisionFaces){
                             Rect bounds = face.getBoundingBox();
                             int i = face.getTrackingId();
+
                             FirebaseVisionFaceLandmark bottomOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM);
                             FirebaseVisionFaceLandmark leftOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_LEFT);
                             FirebaseVisionFaceLandmark rightOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_RIGHT);
+
                             int newLeft = (int)(((double)bounds.left) * 2.25);
                             int newRight = (int)(((double)bounds.right) * 2.25);
                             int newTop = bounds.top * 3;
                             int newBottom = bounds.bottom * 3;
+                            int faceHeight = newTop - newBottom;
+
+                            int mouthLeft = (int) (leftOfMouth.getPosition().getX() * 2.25);
+                            int mouthRight = (int) (rightOfMouth.getPosition().getX() * 2.25);
+                            int mouthTop = (bottomOfMouth.getPosition().getY().intValue() + 20) * 3;
+                            int mouthBottom = bottomOfMouth.getPosition().getY().intValue() * 3;
+
+                            int mouthMidY = (int) (leftOfMouth.getPosition().getY() * 3);
+                            int mouthBottomY = bottomOfMouth.getPosition().getY().intValue() * 3;
+                            int mouthHeight = mouthMidY - mouthBottomY;
+
+                            double mouthToFaceRatio = ((double) mouthHeight)/ ((double)faceHeight);
+                            if(mouthToFaceRatio > maxMouthRatio){
+                                maxMouthRatio = mouthToFaceRatio;
+                                setX = (mouthLeft - mouthRight)/ 2;
+                                setY = mouthMidY;
+                            }
+
                             Rect mouthBounds = new Rect();
-                            mouthBounds.set( leftOfMouth.getPosition().getX().intValue(), bottomOfMouth.getPosition().getY().intValue() + 50, rightOfMouth.getPosition().getX().intValue(), bottomOfMouth.getPosition().getY().intValue());
+                            mouthBounds.set(mouthLeft, mouthTop, mouthRight, mouthBottom);
                             bounds.set(newLeft, newTop, newRight, newBottom);
 //                            Log.v("coordinates", String.valueOf(bounds.bottom));
 //                            Log.v("coordinates", String.valueOf(bounds.top));
@@ -107,6 +129,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             cameraActivity.getSpeechInput();
                         }
                         isAnalyzing.set(false);
+                        cameraActivity.setSpeechTTText(setX,setY);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

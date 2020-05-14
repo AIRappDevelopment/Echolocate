@@ -79,7 +79,7 @@ public class CameraActivity extends AppCompatActivity {
         speechTTText = (TextView) findViewById(R.id.speechTTText);
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
-        isSpeechDetecting.set(false);
+        isSpeechDetecting= new AtomicBoolean(false);
         if(checkPermissions()){
             startCamera();
         }else{
