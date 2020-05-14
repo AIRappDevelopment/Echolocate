@@ -1,4 +1,4 @@
-package com.example.echolocate;
+package com.example.echolocate.helpers;
 
 //made using https://inducesmile.com/android/android-camera2-api-example-tutorial/
 
@@ -25,13 +25,15 @@ import android.view.Surface;
 import android.view.TextureView;
 import android.widget.Toast;
 
+import com.example.echolocate.R;
+
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 
 import java.util.Arrays;
 
-public class CameraPreview extends AppCompatActivity {
+public class CameraPreviewActivity extends AppCompatActivity {
     private static final String TAG = "Echolocate";
     private TextureView textureView;
     private static final SparseIntArray ORIENTATIONS = new SparseIntArray();
@@ -60,7 +62,7 @@ public class CameraPreview extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_camera);
-        textureView = findViewById(R.id.texture);
+        textureView = findViewById(R.id.camera_texture_view);
         assert textureView != null;
         textureView.setSurfaceTextureListener(textureListener);
     }
@@ -178,7 +180,7 @@ public class CameraPreview extends AppCompatActivity {
 
                 @Override
                 public void onConfigureFailed(@NonNull CameraCaptureSession cameraCaptureSession) {
-                    Toast.makeText(CameraPreview.this, "Configuration change", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(CameraPreviewActivity.this, "Configuration change", Toast.LENGTH_SHORT).show();
                 }
             }, null);
         } catch (CameraAccessException e) {
@@ -200,7 +202,7 @@ public class CameraPreview extends AppCompatActivity {
             imageDimension = map.getOutputSizes(SurfaceTexture.class)[0];
             // Add permission for camera and let user grant the permission
             if (ActivityCompat.checkSelfPermission(this, Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(CameraPreview.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
+                ActivityCompat.requestPermissions(CameraPreviewActivity.this, new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CAMERA_PERMISSION);
                 return;
             }
             manager.openCamera(cameraId, stateCallback, null);
@@ -235,7 +237,7 @@ public class CameraPreview extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CAMERA_PERMISSION) {
             if (grantResults[0] == PackageManager.PERMISSION_DENIED) {
-                Toast.makeText(CameraPreview.this, "Sorry!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
+                Toast.makeText(CameraPreviewActivity.this, "Sorry!, you can't use this app without granting permission", Toast.LENGTH_LONG).show();
                 finish();
             }
         }

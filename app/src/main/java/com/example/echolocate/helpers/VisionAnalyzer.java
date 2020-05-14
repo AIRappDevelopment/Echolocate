@@ -1,21 +1,25 @@
 package com.example.echolocate.helpers;
 
+import android.content.Intent;
 import android.graphics.Rect;
 import android.media.Image;
+import android.speech.RecognizerIntent;
+import android.speech.SpeechRecognizer;
 import android.util.Log;
-import android.widget.Toast;
+import android.widget.TextView;
 
-import com.example.echolocate.VisionActivity;
+import com.example.echolocate.CameraActivity;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.ml.vision.common.FirebaseVisionImage;
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata;
 import com.google.firebase.ml.vision.face.FirebaseVisionFace;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
-import com.google.firebase.ml.vision.objects.FirebaseVisionObject;
+import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
 import androidx.camera.core.ImageAnalysis;
@@ -28,11 +32,14 @@ import androidx.camera.core.ImageProxy;
 public class VisionAnalyzer implements ImageAnalysis.Analyzer{
     GraphicOverlay graphicOverlay;
     FirebaseVisionFaceDetector detector;
+    AtomicBoolean isAnalyzing = new AtomicBoolean(false);
+    CameraActivity cameraActivity;
 
-    public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay){
+    public VisionAnalyzer(FirebaseVisionFaceDetector detector, GraphicOverlay graphicOverlay, CameraActivity cameraActivity){
         super();
         this.detector = detector;
         this.graphicOverlay = graphicOverlay;
+        this.cameraActivity = cameraActivity;
     }
 
     /**
@@ -63,6 +70,10 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
      */
     @Override
     public void analyze(ImageProxy imageProxy, int degrees) {
+        if(isAnalyzing.get()){
+            return;
+        }
+        isAnalyzing.set(true);
         if (imageProxy == null || imageProxy.getImage() == null) {
             return;
         }
@@ -73,17 +84,61 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                 .addOnSuccessListener(new OnSuccessListener<List<FirebaseVisionFace>>() {
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
+                        graphicOverlay.clear();
+                        double maxMouthRatio = 0;
+                        int setX = 0;
+                        int setY = 0;
                         for(FirebaseVisionFace face:firebaseVisionFaces){
-                           Log.v("blink", String.valueOf(face.getLeftEyeOpenProbability() > 0.5));
+                            Rect bounds = face.getBoundingBox();
+                            int i = face.getTrackingId();
 
+                            FirebaseVisionFaceLandmark bottomOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM);
+                            FirebaseVisionFaceLandmark leftOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_LEFT);
+                            FirebaseVisionFaceLandmark rightOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_RIGHT);
+
+                            int newLeft = (int)(((double)bounds.left) * 2.25);
+                            int newRight = (int)(((double)bounds.right) * 2.25);
+                            int newTop = bounds.top * 3;
+                            int newBottom = bounds.bottom * 3;
+                            int faceHeight = newTop - newBottom;
+
+                            int mouthLeft = (int) (leftOfMouth.getPosition().getX() * 2.25);
+                            int mouthRight = (int) (rightOfMouth.getPosition().getX() * 2.25);
+                            int mouthTop = (bottomOfMouth.getPosition().getY().intValue() + 20) * 3;
+                            int mouthBottom = bottomOfMouth.getPosition().getY().intValue() * 3;
+
+                            int mouthMidY = (int) (leftOfMouth.getPosition().getY() * 3);
+                            int mouthBottomY = bottomOfMouth.getPosition().getY().intValue() * 3;
+                            int mouthHeight = mouthMidY - mouthBottomY;
+
+                            double mouthToFaceRatio = ((double) mouthHeight)/ ((double)faceHeight);
+                            if(mouthToFaceRatio > maxMouthRatio){
+                                maxMouthRatio = mouthToFaceRatio;
+                                setX = (mouthLeft - mouthRight)/ 2;
+                                setY = mouthMidY;
+                            }
+
+                            Rect mouthBounds = new Rect();
+                            mouthBounds.set(mouthLeft, mouthTop, mouthRight, mouthBottom);
+                            bounds.set(newLeft, newTop, newRight, newBottom);
+//                            Log.v("coordinates", String.valueOf(bounds.bottom));
+//                            Log.v("coordinates", String.valueOf(bounds.top));
+                            RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
+                            graphicOverlay.add(new RectOverlay(graphicOverlay, mouthBounds));
+                            graphicOverlay.add(rectOverlay);
+                            cameraActivity.getSpeechInput();
                         }
+                        isAnalyzing.set(false);
+                        cameraActivity.setSpeechTTText(setX,setY);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         e.printStackTrace();
+                        isAnalyzing.set(false);
                     }
                 });
+
     }
 }

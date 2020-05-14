@@ -8,16 +8,19 @@ import android.util.Log;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BypassRecognitionListener implements RecognitionListener {
     private static final String TAG = "RecognitionListener";
     private TextView speechTTText;
     private SpeechRecognizer speechRecognizer;
     private ArrayList<String> resultingStrings;
+    private AtomicBoolean isSpeechDetecting;
 
-    public BypassRecognitionListener(TextView speechTTText, SpeechRecognizer speechRecognizer){
+    public BypassRecognitionListener(TextView speechTTText, SpeechRecognizer speechRecognizer, AtomicBoolean isSpeechDetecting){
         this.speechTTText = speechTTText;
         this.speechRecognizer = speechRecognizer;
+        this.isSpeechDetecting = isSpeechDetecting;
     }
 
     @Override
@@ -57,6 +60,7 @@ public class BypassRecognitionListener implements RecognitionListener {
     public void onResults(Bundle results) {
         resultingStrings = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         speechTTText.setText(resultingStrings.get(0));//leave for testing
+        isSpeechDetecting.set(false);
     }
 
     @Override
