@@ -85,19 +85,24 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         graphicOverlay.clear();
+                        int maxMouthRatio = 0;
                         for(FirebaseVisionFace face:firebaseVisionFaces){
                             Rect bounds = face.getBoundingBox();
                             int i = face.getTrackingId();
                             FirebaseVisionFaceLandmark bottomOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_BOTTOM);
                             FirebaseVisionFaceLandmark leftOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_LEFT);
+                            FirebaseVisionFaceLandmark rightOfMouth = face.getLandmark(FirebaseVisionFaceLandmark.MOUTH_RIGHT);
                             int newLeft = (int)(((double)bounds.left) * 2.25);
                             int newRight = (int)(((double)bounds.right) * 2.25);
                             int newTop = bounds.top * 3;
                             int newBottom = bounds.bottom * 3;
+                            Rect mouthBounds = new Rect();
+                            mouthBounds.set( leftOfMouth.getPosition().getX().intValue(), bottomOfMouth.getPosition().getY().intValue() + 50, rightOfMouth.getPosition().getX().intValue(), bottomOfMouth.getPosition().getY().intValue());
                             bounds.set(newLeft, newTop, newRight, newBottom);
 //                            Log.v("coordinates", String.valueOf(bounds.bottom));
 //                            Log.v("coordinates", String.valueOf(bounds.top));
                             RectOverlay rectOverlay = new RectOverlay(graphicOverlay, bounds);
+                            graphicOverlay.add(new RectOverlay(graphicOverlay, mouthBounds));
                             graphicOverlay.add(rectOverlay);
                             cameraActivity.getSpeechInput();
                         }
