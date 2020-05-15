@@ -113,10 +113,10 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             int mouthBottomY = bottomOfMouth.getPosition().getY().intValue() * 3;
                             int mouthHeight = mouthMidY - mouthBottomY;
 
-                            double mouthToFaceRatio = ((double) mouthHeight)/ ((double)faceHeight);
+                            double mouthToFaceRatio = (double) (((double) mouthHeight)/ ((double)faceHeight));
                             if(mouthToFaceRatio > maxMouthRatio){
                                 maxMouthRatio = mouthToFaceRatio;
-                                setX = (mouthLeft - mouthRight)/ 2;
+                                setX = Math.abs((mouthLeft - mouthRight)/ 2);
                                 setY = mouthMidY;
                             }
 
@@ -132,7 +132,8 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             cameraActivity.getSpeechInput();
                         }
                         isAnalyzing.set(false);
-                        cameraActivity.setSpeechTTText(setX,setY);
+                        cameraActivity.setSpeechX(setX);
+                        cameraActivity.setSpeechY(setY);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

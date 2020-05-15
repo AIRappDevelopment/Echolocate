@@ -7,6 +7,8 @@ import android.speech.SpeechRecognizer;
 import android.util.Log;
 import android.widget.TextView;
 
+import com.example.echolocate.CameraActivity;
+
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -15,12 +17,12 @@ public class BypassRecognitionListener implements RecognitionListener {
     private TextView speechTTText;
     private SpeechRecognizer speechRecognizer;
     private ArrayList<String> resultingStrings;
-    private AtomicBoolean isSpeechDetecting;
+    private CameraActivity cameraActivity;
 
-    public BypassRecognitionListener(TextView speechTTText, SpeechRecognizer speechRecognizer, AtomicBoolean isSpeechDetecting){
+    public BypassRecognitionListener(TextView speechTTText, SpeechRecognizer speechRecognizer, CameraActivity cameraActivity){
         this.speechTTText = speechTTText;
         this.speechRecognizer = speechRecognizer;
-        this.isSpeechDetecting = isSpeechDetecting;
+        this.cameraActivity = cameraActivity;
     }
 
     @Override
@@ -60,7 +62,9 @@ public class BypassRecognitionListener implements RecognitionListener {
     public void onResults(Bundle results) {
         resultingStrings = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         speechTTText.setText(resultingStrings.get(0));//leave for testing
-        isSpeechDetecting.set(false);
+        cameraActivity.setIsSpeechDetecting(false);
+        cameraActivity.setSpeechTTText(cameraActivity.getSpeechX(), cameraActivity.getSpeechY());
+        Log.v("coords", (cameraActivity.getSpeechX() + " " + cameraActivity.getSpeechY()));
     }
 
     @Override

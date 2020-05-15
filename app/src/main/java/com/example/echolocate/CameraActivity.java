@@ -59,6 +59,24 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView cameraView;
     private GraphicOverlay graphicOverlay;
     private AtomicBoolean isSpeechDetecting;
+    private int speechX = 0;
+    private int speechY = 0;
+
+    public void setSpeechX(int speechX) {
+        this.speechX = speechX;
+    }
+
+    public void setSpeechY(int speechY) {
+        this.speechY = speechY;
+    }
+
+    public int getSpeechX() {
+        return speechX;
+    }
+
+    public int getSpeechY() {
+        return speechY;
+    }
 
     //Allows options to be selected
     private FirebaseVisionFaceDetectorOptions realTimeOpts =
@@ -116,7 +134,7 @@ public class CameraActivity extends AppCompatActivity {
 
             //Adds a listener to run passively in the background
             speechRecognizer = SpeechRecognizer.createSpeechRecognizer(this.getApplicationContext());
-            BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, speechRecognizer, isSpeechDetecting);
+            BypassRecognitionListener listener = new BypassRecognitionListener(speechTTText, speechRecognizer, this);
             speechRecognizer.setRecognitionListener(listener);
             speechRecognizer.startListening(speechRecognizerIntent);
             isSpeechDetecting.set(true);
@@ -126,7 +144,9 @@ public class CameraActivity extends AppCompatActivity {
         }
 
     }
-
+    public void setIsSpeechDetecting(boolean val){
+        isSpeechDetecting.set(val);
+    }
     /**
      * Method starts camera preview and adds analyzer to the lifecycle
      */
