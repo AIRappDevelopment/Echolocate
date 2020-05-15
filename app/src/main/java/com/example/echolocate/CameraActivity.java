@@ -86,7 +86,6 @@ public class CameraActivity extends AppCompatActivity {
             new FirebaseVisionFaceDetectorOptions.Builder()
                     .setPerformanceMode(FirebaseVisionFaceDetectorOptions.ACCURATE)
                     .setLandmarkMode(FirebaseVisionFaceDetectorOptions.ALL_LANDMARKS)
-                    .setContourMode(FirebaseVisionFaceDetectorOptions.ALL_CLASSIFICATIONS)
                     .build();
 
     //creates detector from the options selected
