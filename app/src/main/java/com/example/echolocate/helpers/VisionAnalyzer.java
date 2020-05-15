@@ -137,6 +137,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
 //                                setX = Math.abs((mouthLeft - mouthRight)/ 2);
 //                                setY = mouthMidY;
                                 speakingFace.set(newLeft, newTop, newRight, newBottom);
+                                speakerFaceID = i;
                             }
 
 //                            mouthBounds.set(mouthLeft, mouthTop, mouthRight, mouthBottom);
@@ -153,6 +154,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                         isAnalyzing.set(false);
                         RectOverlay faceOverlay = new RectOverlay(graphicOverlay, speakingFace);
                         graphicOverlay.add(faceOverlay);
+                        Log.v("speaker", String.valueOf(speakerFaceID));
 //                        cameraActivity.setSpeechX(setX);
 //                        cameraActivity.setSpeechY(setY);
                     }
