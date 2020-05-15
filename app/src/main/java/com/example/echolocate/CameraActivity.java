@@ -228,20 +228,4 @@ public class CameraActivity extends AppCompatActivity {
         ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA}, REQUEST_AUDIO_CAMERA_PERMISSION_CODE);
     }
 
-    /**
-     * Sets the parameters actively of a textView
-     * Future extension Code
-     * @param xCoord
-     * @param yCoord
-
-    public void setSpeechTTText(int xCoord, int yCoord){
-    DisplayMetrics displayMetrics = new DisplayMetrics();
-    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-    ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(displayMetrics.heightPixels,
-    displayMetrics.widthPixels);
-    speechTTText.setLayoutParams(layoutParams);
-    speechTTText.setX(xCoord);
-    speechTTText.setY(yCoord);
-    }
-     */
 }

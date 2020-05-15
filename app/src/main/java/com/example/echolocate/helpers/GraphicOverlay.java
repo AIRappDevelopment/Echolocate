@@ -25,6 +25,12 @@ import com.google.android.gms.vision.CameraSource;
 import java.util.HashSet;
 import java.util.Set;
 
+/*
+Demo created by Google
+https://github.com/googlesamples/android-vision/blob/master/visionSamples/FaceTracker/app/src/main/java/com/google/android/gms/samples/vision/face/facetracker/ui/camera/GraphicOverlay.java
+
+ */
+
 /**
  * A view which renders a series of custom graphics to be overlayed on top of an associated preview
  * (i.e., the camera preview).  The creator can add graphics objects, update the objects, and remove
