@@ -20,22 +20,21 @@
         android:id="@+id/graphic_overlay"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        />
+        tools:layout_editor_absoluteX="0dp"
+        tools:layout_editor_absoluteY="16dp" />
 
     <TextView
         android:id="@+id/speechTTText"
-        android:layout_width="200dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="26sp"
-        android:textColor="#FFF"
-        android:inputType="textMultiLine"
-        android:scrollHorizontally="false"
         android:maxLines="2"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:scrollHorizontally="false"
+        android:text="@string/defaultSpeechToText"
+        android:textColor="#FFF"
+        android:textSize="20sp"
+        android:background="@android:color/holo_green_light"
+        app:layout_constraintBottom_toBottomOf="@+id/camera_texture_view"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.446"
-        />
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
