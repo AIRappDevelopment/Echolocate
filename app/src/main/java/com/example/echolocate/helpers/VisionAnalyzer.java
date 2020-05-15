@@ -86,8 +86,9 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         graphicOverlay.clear();
                         double maxMouthRatio = -1;
-                        int setX = cameraActivity.getSpeechX();
-                        int setY = cameraActivity.getSpeechY();
+                        Rect speakingFace = new Rect();
+//                        int setX = cameraActivity.getSpeechX();
+//                        int setY = cameraActivity.getSpeechY();
                         for(FirebaseVisionFace face: firebaseVisionFaces){
                             Rect bounds = face.getBoundingBox();
                             Rect mouthBounds = new Rect();
@@ -102,7 +103,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             int newRight = (int)(((double)bounds.right) * 2.25);
                             int newTop = bounds.top * 3;
                             int newBottom = bounds.bottom * 3;
-                            int faceHeight = newTop - newBottom;
+                            int faceHeight = Math.abs(newTop - newBottom);
 
                             int mouthLeft = (int) (leftOfMouth.getPosition().getX() * 2.25);
                             int mouthRight = (int) (rightOfMouth.getPosition().getX() * 2.25);
@@ -111,29 +112,30 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
 
                             int mouthMidY = (int) (leftOfMouth.getPosition().getY() * 3);
                             int mouthBottomY = bottomOfMouth.getPosition().getY().intValue() * 3;
-                            int mouthHeight = mouthMidY - mouthBottomY;
+                            int mouthHeight = Math.abs(mouthMidY - mouthBottomY);
 
                             double mouthToFaceRatio = (double) (((double) mouthHeight)/ ((double)faceHeight));
                             if(mouthToFaceRatio >= maxMouthRatio){
                                 maxMouthRatio = mouthToFaceRatio;
-                                setX = Math.abs((mouthLeft - mouthRight)/ 2);
-                                setY = mouthMidY;
+//                                setX = Math.abs((mouthLeft - mouthRight)/ 2);
+//                                setY = mouthMidY;
+                                speakingFace.set(newLeft, newTop, newRight, newBottom);
                             }
 
-                            mouthBounds.set(mouthLeft, mouthTop, mouthRight, mouthBottom);
-                            bounds.set(newLeft, newTop, newRight, newBottom);
-
-                            RectOverlay faceOverlay = new RectOverlay(graphicOverlay, bounds);
-                            RectOverlay mouthOverlay = new RectOverlay(graphicOverlay, mouthBounds);
-
-                            graphicOverlay.add(mouthOverlay);
-                            graphicOverlay.add(faceOverlay);
+//                            mouthBounds.set(mouthLeft, mouthTop, mouthRight, mouthBottom);
+//                            bounds.set(newLeft, newTop, newRight, newBottom);
+//
+//                            RectOverlay faceOverlay = new RectOverlay(graphicOverlay, bounds);
+//                            RectOverlay mouthOverlay = new RectOverlay(graphicOverlay, mouthBounds);
+//
+//                            graphicOverlay.add(mouthOverlay);
+//                            graphicOverlay.add(faceOverlay);
 
                             cameraActivity.getSpeechInput();
                         }
                         isAnalyzing.set(false);
-                        cameraActivity.setSpeechX(setX);
-                        cameraActivity.setSpeechY(setY);
+//                        cameraActivity.setSpeechX(setX);
+//                        cameraActivity.setSpeechY(setY);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {

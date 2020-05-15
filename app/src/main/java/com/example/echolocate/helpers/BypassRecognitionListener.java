@@ -67,8 +67,8 @@ public class BypassRecognitionListener implements RecognitionListener {
         speechTTText.setText(resultingStrings.get(0));//leave for testing
         cameraActivity.setIsSpeechDetecting(false);
         speechRecognizer.stopListening();
-        cameraActivity.setSpeechTTText(cameraActivity.getSpeechX(), cameraActivity.getSpeechY());
-        Log.v("coords", (cameraActivity.getSpeechX() + " " + cameraActivity.getSpeechY()));
+//        cameraActivity.setSpeechTTText(cameraActivity.getSpeechX(), cameraActivity.getSpeechY());
+//        Log.v("coords", (cameraActivity.getSpeechX() + " " + cameraActivity.getSpeechY()));
     }
 
     @Override

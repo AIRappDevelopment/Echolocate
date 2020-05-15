@@ -59,6 +59,7 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView cameraView;
     private GraphicOverlay graphicOverlay;
     private AtomicBoolean isSpeechDetecting;
+    /*
     private int speechX;
     private int speechY;
 
@@ -77,6 +78,8 @@ public class CameraActivity extends AppCompatActivity {
     public int getSpeechY() {
         return speechY;
     }
+    */
+
 
     //Allows options to be selected
     private FirebaseVisionFaceDetectorOptions realTimeOpts =
@@ -98,8 +101,8 @@ public class CameraActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
         isSpeechDetecting= new AtomicBoolean(false);
-        speechX = 0;
-        speechY = 0;
+//        speechX = 0;
+//        speechY = 0;
         if(checkPermissions()){
             startCamera();
         }else{

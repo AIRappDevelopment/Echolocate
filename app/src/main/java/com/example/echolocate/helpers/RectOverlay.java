@@ -9,7 +9,7 @@ import android.graphics.RectF;
 import com.example.echolocate.helpers.GraphicOverlay;
 
 public class RectOverlay extends GraphicOverlay.Graphic {
-    private int RECT_COLOR = Color.RED;
+    private int RECT_COLOR = Color.GREEN;
     private float strokeWidth = 4.0f;
     private Paint rectPaint;
     private Rect rect;
