@@ -59,27 +59,6 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView cameraView;
     private GraphicOverlay graphicOverlay;
     private AtomicBoolean isSpeechDetecting;
-    /*
-    private int speechX;
-    private int speechY;
-
-    public void setSpeechX(int speechX) {
-        this.speechX = speechX;
-    }
-
-    public void setSpeechY(int speechY) {
-        this.speechY = speechY;
-    }
-
-    public int getSpeechX() {
-        return speechX;
-    }
-
-    public int getSpeechY() {
-        return speechY;
-    }
-    */
-
 
     //Allows options to be selected
     private FirebaseVisionFaceDetectorOptions realTimeOpts =
@@ -92,6 +71,10 @@ public class CameraActivity extends AppCompatActivity {
     private FirebaseVisionFaceDetector detector = FirebaseVision.getInstance()
             .getVisionFaceDetector(realTimeOpts);
 
+    /**
+     * Initializes the code
+     * @param savedInstanceState
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -100,8 +83,6 @@ public class CameraActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
         isSpeechDetecting= new AtomicBoolean(false);
-//        speechX = 0;
-//        speechY = 0;
         if(checkPermissions()){
             startCamera();
         }else{
@@ -146,9 +127,7 @@ public class CameraActivity extends AppCompatActivity {
         }
 
     }
-    public void setIsSpeechDetecting(boolean val){
-        isSpeechDetecting.set(val);
-    }
+
     /**
      * Method starts camera preview and adds analyzer to the lifecycle
      */
@@ -160,7 +139,7 @@ public class CameraActivity extends AppCompatActivity {
 
         //configures the preview
         PreviewConfig pConfig = new PreviewConfig.Builder()
-                .setTargetResolution(screen)
+                //.setTargetResolution(screen)
                 //.setLensFacing(CameraX.LensFacing.FRONT)
                 .build();
 
@@ -223,6 +202,14 @@ public class CameraActivity extends AppCompatActivity {
         }
         mx.postRotate((float)rotationDgr, cX, cY);
         cameraView.setTransform(mx);
+    }
+
+    /**
+     * setter for isSpeechDetecting atomic boolean
+     * @param val
+     */
+    public void setIsSpeechDetecting(boolean val){
+        isSpeechDetecting.set(val);
     }
 
     /**

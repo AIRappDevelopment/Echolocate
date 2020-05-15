@@ -5,5 +5,5 @@
     <string name="toggleOffStr">Off</string>
     <string name="toggleOnStr">On</string>
     <string name="logoImageContentDescription">Echolocation Logo</string>
-    <string name="defaultSpeechToText">The highlighted face is whose talking!</string>
+    <string name="defaultSpeechToText">The highlighted face is the one who is talking! Disclaimer: given technology restraints, the app is not accurate.</string>
 </resources>
