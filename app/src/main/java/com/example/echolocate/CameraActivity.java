@@ -73,9 +73,7 @@ public class CameraActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
         isSpeechDetecting= new AtomicBoolean(false);
-        double screenWidth = Resources.getSystem().getDisplayMetrics().widthPixels;
-        double screenHeight = Resources.getSystem().getDisplayMetrics().heightPixels;
-        Log.v("screen", screenHeight + " " + screenWidth);
+
         //does a permission check before starting the camera
         if(checkPermissions()){
             startCamera();
