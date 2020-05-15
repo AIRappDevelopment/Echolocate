@@ -12,6 +12,10 @@ import com.example.echolocate.CameraActivity;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
+/**
+ * Custom written version of a recognition listener
+ * Heavily modified from https://stackoverflow.com/questions/19724471/speech-recognition-without-google-dialog-boxes
+ */
 public class BypassRecognitionListener implements RecognitionListener {
     private static final String TAG = "RecognitionListener";
     private TextView speechTTText;
@@ -25,6 +29,7 @@ public class BypassRecognitionListener implements RecognitionListener {
         this.cameraActivity = cameraActivity;
     }
 
+    //When speech detection starts, clear the text
     @Override
     public void onBeginningOfSpeech() {
         speechTTText.setText("");
@@ -38,6 +43,7 @@ public class BypassRecognitionListener implements RecognitionListener {
     public void onEndOfSpeech() {
     }
 
+    //When an error occurs, reset the listener
     @Override
     public void onError(int error)
     {
@@ -54,29 +60,24 @@ public class BypassRecognitionListener implements RecognitionListener {
 
     @Override
     public void onPartialResults(Bundle partialResults) {
-        //speechRecognizer.stopListening();
+
     }
 
     @Override
     public void onReadyForSpeech(Bundle params) {
     }
 
+    //when results occur, set the text to the result, and allow the reader to be called again
     @Override
     public void onResults(Bundle results) {
         resultingStrings = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         speechTTText.setText(resultingStrings.get(0));//leave for testing
         cameraActivity.setIsSpeechDetecting(false);
         speechRecognizer.stopListening();
-//        cameraActivity.setSpeechTTText(cameraActivity.getSpeechX(), cameraActivity.getSpeechY());
-//        Log.v("coords", (cameraActivity.getSpeechX() + " " + cameraActivity.getSpeechY()));
     }
 
     @Override
     public void onRmsChanged(float rmsdB) {
-    }
-
-    public ArrayList<String> getResults(){
-        return resultingStrings;
     }
 
 }

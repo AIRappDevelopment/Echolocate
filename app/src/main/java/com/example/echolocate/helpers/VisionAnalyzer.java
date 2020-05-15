@@ -106,6 +106,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                         double maxMouthRatio = -1;
                         Rect speakingFace = new Rect();
 
+                        //adjusts for rotation issue, ratio represents scale factor from camera image to screen image
                         double heightRatio;
                         double widthRatio;
                         if(imageWidth < imageHeight){
@@ -159,7 +160,9 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             //Tells the speech detection to begin, once a face is found
                             cameraActivity.getSpeechInput();
                         }
+                        //sets the state, so analyzation can start again.
                         isAnalyzing.set(false);
+                        //draws the face overlay on who is talking
                         RectOverlay faceOverlay = new RectOverlay(graphicOverlay, speakingFace);
                         graphicOverlay.add(faceOverlay);
                     }

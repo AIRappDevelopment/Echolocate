@@ -20,21 +20,12 @@ import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.util.Size;
 import android.view.Surface;
 import android.view.TextureView;
-import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.ToggleButton;
-
-
-import java.util.ArrayList;
-
 
 import com.example.echolocate.helpers.BypassRecognitionListener;
 import com.example.echolocate.helpers.GraphicOverlay;
@@ -52,13 +43,14 @@ public class CameraActivity extends AppCompatActivity {
 
     private static final int REQUEST_AUDIO_CAMERA_PERMISSION_CODE = 1;
 
+    //Runs vision processing on a separate thread to offload the work
     private Executor executor = Executors.newSingleThreadExecutor();
 
     private TextView speechTTText;//speech to text result
-    private SpeechRecognizer speechRecognizer;
-    private TextureView cameraView;
-    private GraphicOverlay graphicOverlay;
-    private AtomicBoolean isSpeechDetecting;
+    private SpeechRecognizer speechRecognizer;//speech recognizer
+    private TextureView cameraView;//Camera texture
+    private GraphicOverlay graphicOverlay;//Graphic Overlay
+    private AtomicBoolean isSpeechDetecting;//State of speech detector
 
     //Allows options to be selected
     private FirebaseVisionFaceDetectorOptions realTimeOpts =
@@ -83,26 +75,13 @@ public class CameraActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
         isSpeechDetecting= new AtomicBoolean(false);
+
+        //does a permission check before starting the camera
         if(checkPermissions()){
             startCamera();
         }else{
             requestPermissions();
         }
-    }
-
-    /**
-     * Sets the parameters actively of a textView
-     * @param xCoord
-     * @param yCoord
-     */
-    public void setSpeechTTText(int xCoord, int yCoord){
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(displayMetrics.heightPixels,
-                displayMetrics.widthPixels);
-        speechTTText.setLayoutParams(layoutParams);
-        speechTTText.setX(xCoord);
-        speechTTText.setY(yCoord);
     }
 
     /**
@@ -130,12 +109,11 @@ public class CameraActivity extends AppCompatActivity {
 
     /**
      * Method starts camera preview and adds analyzer to the lifecycle
+     * All camerax done with the help of https://developer.android.com/training/camerax
+     * and https://heartbeat.fritz.ai/blink-detection-on-android-using-firebase-ml-kits-face-detection-api-6d09823db535
      */
     private void startCamera(){
         CameraX.unbindAll();
-
-        AspectRatio aspectRatio = AspectRatio.RATIO_16_9;
-        Size screen = new Size(1080, 1920); //size of the screen
 
         //configures the preview
         PreviewConfig pConfig = new PreviewConfig.Builder()
@@ -145,7 +123,7 @@ public class CameraActivity extends AppCompatActivity {
 
         Preview preview = new Preview(pConfig);
 
-        //to update the surface texture we  have to destroy it first then re-add it
+        //to update the surface texture we have to destroy it first then re-add it
         preview.setOnPreviewOutputUpdateListener(
                 new Preview.OnPreviewOutputUpdateListener() {
                     @Override
@@ -157,12 +135,13 @@ public class CameraActivity extends AppCompatActivity {
                         updateTransform();
                     }
                 });
-        //preview.setTargetRotation(Surface.ROTATION_270);
+
         //configures the image analyzer
         ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder()
                 .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)
                 .build();
 
+        //passes in our new thread, and our vision analyzer class to run image recognition with
         ImageAnalysis imageAnalysis = new ImageAnalysis(iaConfig);
         imageAnalysis.setAnalyzer(executor, new VisionAnalyzer(detector, graphicOverlay, this));
 
@@ -248,4 +227,21 @@ public class CameraActivity extends AppCompatActivity {
     private void requestPermissions() {
         ActivityCompat.requestPermissions(CameraActivity.this, new String[]{Manifest.permission.RECORD_AUDIO, Manifest.permission.CAMERA}, REQUEST_AUDIO_CAMERA_PERMISSION_CODE);
     }
+
+    /**
+     * Sets the parameters actively of a textView
+     * Future extension Code
+     * @param xCoord
+     * @param yCoord
+
+    public void setSpeechTTText(int xCoord, int yCoord){
+    DisplayMetrics displayMetrics = new DisplayMetrics();
+    getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+    ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(displayMetrics.heightPixels,
+    displayMetrics.widthPixels);
+    speechTTText.setLayoutParams(layoutParams);
+    speechTTText.setX(xCoord);
+    speechTTText.setY(yCoord);
+    }
+     */
 }

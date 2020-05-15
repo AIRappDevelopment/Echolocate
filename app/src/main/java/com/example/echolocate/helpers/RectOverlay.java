@@ -8,6 +8,10 @@ import android.graphics.RectF;
 
 import com.example.echolocate.helpers.GraphicOverlay;
 
+/**
+ * Done with the help of firebase.google.com
+ * Overlay rectangle settings
+ */
 public class RectOverlay extends GraphicOverlay.Graphic {
     private int RECT_COLOR = Color.GREEN;
     private float strokeWidth = 4.0f;
