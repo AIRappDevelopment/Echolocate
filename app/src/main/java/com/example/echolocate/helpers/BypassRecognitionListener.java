@@ -42,6 +42,9 @@ public class BypassRecognitionListener implements RecognitionListener {
     public void onError(int error)
     {
         Log.d(TAG, Integer.toString(error));
+        speechRecognizer.stopListening();
+        speechRecognizer.destroy();
+        cameraActivity.setIsSpeechDetecting(false);
     }
 
     @Override
@@ -51,7 +54,7 @@ public class BypassRecognitionListener implements RecognitionListener {
 
     @Override
     public void onPartialResults(Bundle partialResults) {
-
+        //speechRecognizer.stopListening();
     }
 
     @Override
@@ -63,6 +66,7 @@ public class BypassRecognitionListener implements RecognitionListener {
         resultingStrings = results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
         speechTTText.setText(resultingStrings.get(0));//leave for testing
         cameraActivity.setIsSpeechDetecting(false);
+        speechRecognizer.stopListening();
         cameraActivity.setSpeechTTText(cameraActivity.getSpeechX(), cameraActivity.getSpeechY());
         Log.v("coords", (cameraActivity.getSpeechX() + " " + cameraActivity.getSpeechY()));
     }
@@ -74,4 +78,5 @@ public class BypassRecognitionListener implements RecognitionListener {
     public ArrayList<String> getResults(){
         return resultingStrings;
     }
+
 }

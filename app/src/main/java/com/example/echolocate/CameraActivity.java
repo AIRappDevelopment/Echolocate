@@ -59,8 +59,8 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView cameraView;
     private GraphicOverlay graphicOverlay;
     private AtomicBoolean isSpeechDetecting;
-    private int speechX = 0;
-    private int speechY = 0;
+    private int speechX;
+    private int speechY;
 
     public void setSpeechX(int speechX) {
         this.speechX = speechX;
@@ -98,6 +98,8 @@ public class CameraActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
         isSpeechDetecting= new AtomicBoolean(false);
+        speechX = 0;
+        speechY = 0;
         if(checkPermissions()){
             startCamera();
         }else{
@@ -124,7 +126,7 @@ public class CameraActivity extends AppCompatActivity {
      *Gets Speech to Text Converstion
      */
     public void getSpeechInput(){
-        if (checkPermissions() && !isSpeechDetecting.get()) {
+        if (!isSpeechDetecting.get()) {
             //creates a speech recognizer intent and sets its settings
             Intent speechRecognizerIntent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             speechRecognizerIntent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
@@ -139,8 +141,6 @@ public class CameraActivity extends AppCompatActivity {
             speechRecognizer.startListening(speechRecognizerIntent);
             isSpeechDetecting.set(true);
             //assignText(listener.getResults());
-        } else {
-            requestPermissions();
         }
 
     }
@@ -173,10 +173,10 @@ public class CameraActivity extends AppCompatActivity {
                         parent.removeView(cameraView);
                         parent.addView(cameraView, 0);
                         cameraView.setSurfaceTexture(output.getSurfaceTexture());
-                        //updateTransform();
+                        updateTransform();
                     }
                 });
-
+        //preview.setTargetRotation(Surface.ROTATION_270);
         //configures the image analyzer
         ImageAnalysisConfig iaConfig = new ImageAnalysisConfig.Builder()
                 .setImageReaderMode(ImageAnalysis.ImageReaderMode.ACQUIRE_LATEST_IMAGE)

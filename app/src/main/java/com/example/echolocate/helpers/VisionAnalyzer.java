@@ -85,9 +85,9 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                     @Override
                     public void onSuccess(List<FirebaseVisionFace> firebaseVisionFaces) {
                         graphicOverlay.clear();
-                        double maxMouthRatio = 0;
-                        int setX = 0;
-                        int setY = 0;
+                        double maxMouthRatio = -1;
+                        int setX = cameraActivity.getSpeechX();
+                        int setY = cameraActivity.getSpeechY();
                         for(FirebaseVisionFace face: firebaseVisionFaces){
                             Rect bounds = face.getBoundingBox();
                             Rect mouthBounds = new Rect();
@@ -114,7 +114,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             int mouthHeight = mouthMidY - mouthBottomY;
 
                             double mouthToFaceRatio = (double) (((double) mouthHeight)/ ((double)faceHeight));
-                            if(mouthToFaceRatio > maxMouthRatio){
+                            if(mouthToFaceRatio >= maxMouthRatio){
                                 maxMouthRatio = mouthToFaceRatio;
                                 setX = Math.abs((mouthLeft - mouthRight)/ 2);
                                 setY = mouthMidY;
