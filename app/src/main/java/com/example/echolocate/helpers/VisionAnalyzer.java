@@ -160,8 +160,10 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             //Tells the speech detection to begin, once a face is found
                             cameraActivity.getSpeechInput();
                         }
+
                         //sets the state, so analyzation can start again.
                         isAnalyzing.set(false);
+
                         //draws the face overlay on who is talking
                         RectOverlay faceOverlay = new RectOverlay(graphicOverlay, speakingFace);
                         graphicOverlay.add(faceOverlay);
