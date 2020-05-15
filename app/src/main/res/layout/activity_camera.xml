@@ -32,7 +32,7 @@
         android:text="@string/defaultSpeechToText"
         android:textColor="#FFF"
         android:textSize="20sp"
-        android:background="#177E80"
+        android:background="#9bcf8a"
         app:layout_constraintBottom_toBottomOf="@+id/camera_texture_view"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

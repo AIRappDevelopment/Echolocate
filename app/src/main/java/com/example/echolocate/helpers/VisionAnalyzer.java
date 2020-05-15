@@ -15,7 +15,6 @@ import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetector;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceLandmark;
 
 import java.util.List;
-import java.util.Locale;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import androidx.annotation.NonNull;
@@ -117,8 +116,8 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             widthRatio = screenWidth / imageHeight;
                         }
 
-                        Log.v("screen dimensions", screenHeight + " " +  imageWidth);
-                        Log.v("screen dimensions", screenWidth + " " +  imageHeight);
+                        Log.v("screen dimensions", screenHeight + " " +  imageWidth + " " + heightRatio);
+                        Log.v("screen dimensions", screenWidth + " " +  imageHeight + " " + widthRatio);
 
                         //Loops through each face found
                         for(FirebaseVisionFace face: firebaseVisionFaces){
@@ -151,7 +150,7 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             //Calculates the mouth to face ratio of each user, this ensures that being closer and appearing bigger does not affect "mouth size"
                             //updates the largest mouth
                             double mouthToFaceRatio = (double) (((double) mouthHeight)/ ((double)faceHeight));
-                            Log.v("length", String.valueOf(mouthToFaceRatio));
+                            //Log.v("length", String.valueOf(mouthToFaceRatio));
                             if(mouthToFaceRatio >= maxMouthRatio){
                                 maxMouthRatio = mouthToFaceRatio;
                                 speakingFace.set(newLeft, newTop, newRight, newBottom);
