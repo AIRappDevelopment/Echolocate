@@ -13,16 +13,17 @@ import com.example.echolocate.helpers.GraphicOverlay;
  * Overlay rectangle settings
  */
 public class RectOverlay extends GraphicOverlay.Graphic {
-    private int RECT_COLOR = Color.GREEN;
+    private int RECT_COLOR;
     private float strokeWidth = 4.0f;
     private Paint rectPaint;
     private Rect rect;
     private GraphicOverlay graphicOverlay;
-    public RectOverlay(GraphicOverlay graphicOverlay, Rect rect) {
+    public RectOverlay(GraphicOverlay graphicOverlay, Rect rect, int RECT_COLOR) {
         super(graphicOverlay);
         this.graphicOverlay = graphicOverlay;
         this.rect = rect;
         rectPaint = new Paint();
+        this.RECT_COLOR = RECT_COLOR;
         rectPaint.setColor(RECT_COLOR);
         rectPaint.setStyle(Paint.Style.STROKE);
         rectPaint.setStrokeWidth(strokeWidth);

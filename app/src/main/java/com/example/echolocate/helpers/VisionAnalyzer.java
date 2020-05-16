@@ -1,6 +1,7 @@
 package com.example.echolocate.helpers;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.media.Image;
 import android.util.Log;
@@ -156,13 +157,19 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                                 speakingFace.set(newLeft, newTop, newRight, newBottom);
                             }
 
+                            if(cameraActivity.getShowAllFaces()){
+                                Rect tmpFace = new Rect(newLeft, newTop, newRight, newBottom);
+                                RectOverlay faceOverlay = new RectOverlay(graphicOverlay, tmpFace, Color.RED);
+                                graphicOverlay.add(faceOverlay);
+                            }
+
                             //Tells the speech detection to begin, once a face is found
                             cameraActivity.getSpeechInput();
                         }
                         //sets the state, so analyzation can start again.
                         isAnalyzing.set(false);
                         //draws the face overlay on who is talking
-                        RectOverlay faceOverlay = new RectOverlay(graphicOverlay, speakingFace);
+                        RectOverlay faceOverlay = new RectOverlay(graphicOverlay, speakingFace, Color.GREEN);
                         graphicOverlay.add(faceOverlay);
                     }
                 })

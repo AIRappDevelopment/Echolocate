@@ -7,6 +7,20 @@
     android:layout_height="match_parent"
     tools:context=".CameraActivity">
 
+    <TextView
+        android:id="@+id/speechTTText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#9bcf8a"
+        android:maxLines="3"
+        android:scrollHorizontally="false"
+        android:text="@string/defaultSpeechToText"
+        android:textColor="#FFF"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toBottomOf="@+id/camera_texture_view"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
     <TextureView
         android:id="@+id/camera_texture_view"
         android:layout_width="match_parent"
@@ -23,18 +37,17 @@
         tools:layout_editor_absoluteX="0dp"
         tools:layout_editor_absoluteY="16dp" />
 
-    <TextView
-        android:id="@+id/speechTTText"
-        android:layout_width="match_parent"
+    <Button
+        android:id="@+id/button"
+        style="@style/Widget.AppCompat.Button.Borderless"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:maxLines="3"
-        android:scrollHorizontally="false"
-        android:text="@string/defaultSpeechToText"
-        android:textColor="#FFF"
-        android:textSize="20sp"
-        android:background="#9bcf8a"
+        android:layout_marginBottom="100dp"
+        android:onClick="toggleShowAllFaces"
+        android:text="@string/buttonTextStr"
         app:layout_constraintBottom_toBottomOf="@+id/camera_texture_view"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/camera_texture_view"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@+id/camera_texture_view" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

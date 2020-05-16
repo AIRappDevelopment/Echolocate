@@ -19,6 +19,7 @@ import android.speech.RecognizerIntent;
 import android.speech.SpeechRecognizer;
 import android.view.Surface;
 import android.view.TextureView;
+import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +48,7 @@ public class CameraActivity extends AppCompatActivity {
     private TextureView cameraView;//Camera texture
     private GraphicOverlay graphicOverlay;//Graphic Overlay
     private AtomicBoolean isSpeechDetecting;//State of speech detector
+    private AtomicBoolean showAllFaces;
 
     //Allows options to be selected
     private FirebaseVisionFaceDetectorOptions realTimeOpts =
@@ -71,6 +73,7 @@ public class CameraActivity extends AppCompatActivity {
         cameraView = findViewById(R.id.camera_texture_view);
         graphicOverlay = findViewById(R.id.graphic_overlay);
         isSpeechDetecting= new AtomicBoolean(false);
+        showAllFaces = new AtomicBoolean(false);
 
         //does a permission check before starting the camera
         if(checkPermissions()){
@@ -180,11 +183,30 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
+     * upon clicking the show all faces button, it will toggle the show faces functionality
+     * @param v
+     */
+    public void toggleShowAllFaces(View v){
+        if(showAllFaces.get()){
+            showAllFaces.set(false);
+        }else{
+            showAllFaces.set(true);
+        }
+    }
+
+    /**
      * setter for isSpeechDetecting atomic boolean
      * @param val
      */
     public void setIsSpeechDetecting(boolean val){
         isSpeechDetecting.set(val);
+    }
+
+    /**
+     * returns show all faces
+     */
+    public boolean getShowAllFaces(){
+        return showAllFaces.get();
     }
 
     /**
