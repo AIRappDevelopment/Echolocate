@@ -84,7 +84,7 @@ public class CameraActivity extends AppCompatActivity {
     }
 
     /**
-     *Gets Speech to Text Converstion
+     * Gets Speech to Text Converstion
      */
     public void getSpeechInput(){
         if (!isSpeechDetecting.get()) {
