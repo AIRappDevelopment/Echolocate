@@ -132,8 +132,8 @@ public class VisionAnalyzer implements ImageAnalysis.Analyzer{
                             //Finds the bounding box around around the face and adjusts them from the camera image and scales them onto the Preview Image
                             int newLeft = (int)(((double)bounds.left) * widthRatio);
                             int newRight = (int)(((double)bounds.right) * widthRatio);
-                            int newTop = (int) (bounds.top * heightRatio);
-                            int newBottom = (int) (bounds.bottom * heightRatio);
+                            int newTop = (int) ((double)bounds.top * heightRatio);
+                            int newBottom = (int) ((double)bounds.bottom * heightRatio);
                             int faceHeight = Math.abs(newTop - newBottom);
 
                             //mouth bounding box (unused atm)
